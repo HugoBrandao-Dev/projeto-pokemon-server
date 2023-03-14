@@ -1,0 +1,19 @@
+{
+  "name": "projeto-pokemon-server",
+  "version": "1.0.0",
+  "description": "Lado do servidor do projeto pokemon.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/HugoBrandao-Dev/projeto-pokemon-server.git"
+  },
+  "author": "Hugo da Rocha Brandão",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HugoBrandao-Dev/projeto-pokemon-server/issues"
+  },
+  "homepage": "https://github.com/HugoBrandao-Dev/projeto-pokemon-server#readme"
+}
