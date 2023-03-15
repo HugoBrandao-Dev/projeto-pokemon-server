@@ -7,5 +7,7 @@ CREATE TABLE users (
 	PRIMARY KEY(id)
 );
 
+SELECT * FROM users;
+
 DESCRIBE users;
 DROP TABLE users;
