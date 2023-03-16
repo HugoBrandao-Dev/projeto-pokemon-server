@@ -4,6 +4,10 @@ CREATE TABLE items_types (
 	PRIMARY KEY (id)
 );
 
+INSERT INTO items_types(type_name) VALUES
+("ball"),
+("fruit");
+
 SELECT * FROM items_types;
 DESCRIBE items_types;
 DROP TABLE items_types;
