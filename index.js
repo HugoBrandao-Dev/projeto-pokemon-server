@@ -47,6 +47,29 @@ app.get("/register", (req, res) => {
     })
 })
 
+app.get('/capture', (req, res) => {
+  let id = 0
+  let pokemon = {
+    chain_id: 1,
+    evolution_id: 1,
+    experience_plus: 50
+  }
+  DATABASE.insert(pokemon).into('captured_pokemons')
+    .then(responsePokemon => {
+      let pokemon_id = responsePokemon[0]
+      DATABASE.insert({ user_id: id, pokemon_id}).into('users_pokemons')
+        .then(responseCapture => {
+          res.send('Pokemon cadastrado com sucesso.')
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    })
+    .catch(error => {
+      console.log(error)
+    })
+})
+
 app.listen(4000, error => {
   if (error) {
     console.error('Erro no servidor.')
