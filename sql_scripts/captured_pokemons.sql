@@ -17,5 +17,6 @@ CREATE TABLE captured_pokemons (
 	PRIMARY KEY (id)
 );
 
+SELECT * FROM captured_pokemons;
 DESCRIBE captured_pokemons;
 DROP TABLE captured_pokemons;
