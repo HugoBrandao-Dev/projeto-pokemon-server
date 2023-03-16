@@ -7,3 +7,4 @@ CREATE TABLE users_pokemons (
 
 SELECT * FROM users_pokemons;
 DESCRIBE users_pokemons;
+DROP TABLE users_pokemons;
