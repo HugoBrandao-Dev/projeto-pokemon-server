@@ -2,11 +2,11 @@ const express = require('express')
 const app = express()
 const DATABASE = require('./database/connection.js')
 
-app.get("/login", (req, res) => {
+app.get("/register", (req, res) => {
   DATABASE.insert({
     full_name: 'Tobias de Oliveira',
     born_date: '2023-03-15',
-    email: 'tobias@gmail.com',
+    email: 'josias@gmail.com',
     user_password: 'tobias123'
   }).into('users')
     .then(response => {
