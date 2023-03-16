@@ -8,4 +8,11 @@ CREATE TABLE pokemons_for_beginner (
 	PRIMARY KEY (id)
 );
 
+INSERT INTO pokemons_for_beginner(pokemon) VALUES
+("bulbasaur"),
+("charmander"),
+("squirtle"),
+("pichu");
+
+SELECT * FROM pokemons_for_beginner;
 DESCRIBE pokemons_for_beginner;
