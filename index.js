@@ -131,6 +131,27 @@ app.get('/balls/:id', (req, res) => {
     })
 })
 
+// O id é o ID do usuário.
+app.get('/fruits/:id', (req, res) => {
+  let user_id = req.params.id
+
+  DATABASE.select([
+    'items.id',
+    'items.item',
+    'users_items.amount'
+  ]).table('users_items')
+  .innerJoin('items', 'items.id', 'users_items.item_id')
+  .innerJoin('items_types', 'items_types.id', 'items.type_id')
+  .where({'users_items.user_id': user_id, 'items_types.type_name': 'fruit'})
+    .then(response => {
+      if (response.length) {
+        res.send(response)
+      } else {
+        res.send('Usuário não possui frutas.')
+      }
+    })
+})
+
 app.listen(4000, error => {
   if (error) {
     console.error('Erro no servidor.')
