@@ -93,6 +93,23 @@ app.get('/pokemons', (req, res) => {
     })
 })
 
+app.get('/pokemon/:id', (req, res) => {
+  let pokemon_id = req.params.id
+
+  DATABASE.select().table('captured_pokemons').where({ 'captured_pokemons.id': pokemon_id })
+    .then(response => {
+      if (response.length) {
+        let pokemon = response[0]
+        res.send(pokemon)
+      } else {
+        res.send('Pokemon não encontrado.')
+      }
+    })
+    .catch(error => {
+      console.log(error)
+    })
+})
+
 app.listen(4000, error => {
   if (error) {
     console.error('Erro no servidor.')
