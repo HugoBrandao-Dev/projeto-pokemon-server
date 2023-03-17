@@ -8,3 +8,6 @@ CREATE TABLE users_pokemons (
 SELECT * FROM users_pokemons;
 DESCRIBE users_pokemons;
 DROP TABLE users_pokemons;
+
+# Comando para excluir todos os registros da tabela, sem a necessidade de excluir a tabela.
+TRUNCATE TABLE users_pokemons;

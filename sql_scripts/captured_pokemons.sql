@@ -20,3 +20,6 @@ CREATE TABLE captured_pokemons (
 SELECT * FROM captured_pokemons;
 DESCRIBE captured_pokemons;
 DROP TABLE captured_pokemons;
+
+# Comando para excluir todos os registros da tabela, sem a necessidade de excluir a tabela.
+TRUNCATE TABLE captured_pokemons;
