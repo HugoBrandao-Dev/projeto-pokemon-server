@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 const DATABASE = require('./database/connection.js')
 
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+
 let FAKE_FORMS = {
   forLogin: [{
     email: 'tobias@gmail.com',
@@ -128,6 +131,42 @@ app.get('/balls/:id', (req, res) => {
       } else {
         res.send('Usuário não possui poke-bolas.')
       }
+    })
+})
+
+
+app.post('/balls', (req, res) => {
+  let user_id = req.body.id
+
+  async function setBallsAmount() {
+    try {
+      await DATABASE.update({ amount: req.body['poke-ball'] })
+      .where({ user_id, item_id: 1 })
+      .table('users_items')
+
+      await DATABASE.update({ amount: req.body['great-ball'] })
+      .where({ user_id, item_id: 2 })
+      .table('users_items')
+
+      await DATABASE.update({ amount: req.body['ultra-ball'] })
+      .where({ user_id, item_id: 3 })
+      .table('users_items')
+
+      await DATABASE.update({ amount: req.body['master-ball'] })
+      .where({ user_id, item_id: 4 })
+      .table('users_items')
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  setBallsAmount()
+    .then(response => {
+      res.send("Informações de poke-bolas guardadas.")
+    })
+    .catch(error => {
+      res.send("Erro ao guardada informações das poke-bolas.")
     })
 })
 
