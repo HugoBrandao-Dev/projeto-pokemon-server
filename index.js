@@ -191,6 +191,37 @@ app.get('/fruits/:id', (req, res) => {
     })
 })
 
+app.post('/fruits', (req, res) => {
+  let user_id = req.body.id
+
+  async function setFruitsAmount() {
+    try {
+      await DATABASE.update({ amount: req.body['jaboca-berry'] })
+      .where({ user_id, item_id: 5 })
+      .table('users_items')
+
+      await DATABASE.update({ amount: req.body['razz-berry'] })
+      .where({ user_id, item_id: 6 })
+      .table('users_items')
+
+      await DATABASE.update({ amount: req.body['bluk-berry'] })
+      .where({ user_id, item_id: 7 })
+      .table('users_items')
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  setFruitsAmount()
+    .then(response => {
+      res.send("Informações de frutas guardadas.")
+    })
+    .catch(error => {
+      res.send("Erro ao guardada informações das frutas.")
+    })
+})
+
 app.listen(4000, error => {
   if (error) {
     console.error('Erro no servidor.')
