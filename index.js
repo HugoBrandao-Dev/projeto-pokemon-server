@@ -48,7 +48,7 @@ app.get("/register", (req, res) => {
 })
 
 app.get('/capture', (req, res) => {
-  let id = 0
+  let id = 1
   let pokemon = {
     chain_id: 1,
     evolution_id: 1,
@@ -64,6 +64,29 @@ app.get('/capture', (req, res) => {
         .catch(error => {
           console.log(error)
         })
+    })
+    .catch(error => {
+      console.log(error)
+    })
+})
+
+app.get('/pokemons', (req, res) => {
+  let id_user = 1
+
+  DATABASE.select([
+    'captured_pokemons.id',
+    'captured_pokemons.chain_id',
+    'captured_pokemons.evolution_id',
+    'captured_pokemons.experience_plus']).table('users_pokemons')
+  .innerJoin('captured_pokemons', 'captured_pokemons.id', 'users_pokemons.pokemon_id')
+  .where({ 'users_pokemons.user_id': id_user })
+    .then(response => {
+      if (response.length) {
+        let pokemons = response[0]
+        res.send(pokemons)
+      } else {
+        res.send('O usuário não tem pokemons.')
+      }
     })
     .catch(error => {
       console.log(error)
