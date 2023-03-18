@@ -78,27 +78,26 @@ app.post("/register", (req, res) => {
     })
 })
 
-app.get('/capture', (req, res) => {
-  let id = 1
-  let pokemon = {
-    chain_id: 1,
-    evolution_id: 1,
-    experience_plus: 50
-  }
-  DATABASE.insert(pokemon).into('captured_pokemons')
-    .then(responsePokemon => {
-      let pokemon_id = responsePokemon[0]
-      DATABASE.insert({ user_id: id, pokemon_id}).into('users_pokemons')
-        .then(responseCapture => {
-          res.send('Pokemon cadastrado com sucesso.')
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    })
-    .catch(error => {
+app.post('/capture', (req, res) => {
+  // ID do usuário que capturou o pokemon, geralmente o próprio usuário que estará logado na sessão.
+  let user_id = req.body.user_id
+
+  // Informações do pokemon a serem cadastradas.
+  let chain_id = req.body.chain_id
+  let evolution_id = req.body.evolution_id
+  let experience_plus = req.body.experience_plus
+
+  async function capturePokemon() {
+    try {
+      let pokemon_id = await DATABASE.insert({ chain_id, evolution_id, experience_plus }) .into('captured_pokemons')
+      await DATABASE.insert({ user_id, pokemon_id}).into('users_pokemons')
+      res.send('Pokemon capturado com sucesso.')
+    } catch (error) {
       console.log(error)
-    })
+    }
+  }
+
+  capturePokemon()
 })
 
 app.get('/pokemons', (req, res) => {
