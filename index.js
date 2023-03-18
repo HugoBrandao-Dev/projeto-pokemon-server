@@ -100,6 +100,26 @@ app.post('/capture', (req, res) => {
   capturePokemon()
 })
 
+/*
+Essa rota é responsável por alterar as informações do pokemon, podendo ser usada tanto para acrescentar Exp, quanto para evoluir o pokemon.
+*/
+app.post('/upgradePokemon', (req, res) => {
+  // A atualização dos status, tem como base o ID do pokemon
+  let id = req.body.id
+
+  // Informações do pokemon a serem atualizadas.
+  let evolution_id = req.body.evolution_id
+  let experience_plus = req.body.experience_plus
+
+  DATABASE.update({ evolution_id, experience_plus }).where({ id }).table('captured_pokemons')
+    .then(response => {
+      res.send('Informações do pokemon atualizadas com sucesso.')
+    })
+    .catch(error => {
+      console.log(error)
+    })
+})
+
 app.post('/pokemons', (req, res) => {
   let user_id = req.body.user_id
 
