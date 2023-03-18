@@ -26,7 +26,7 @@ let FAKE_FORMS = {
   }]
 }
 
-app.get('/login', (req, res) => {
+app.post('/login', (req, res) => {
   let email = req.body.email
   let user_password = req.body.user_password
 
