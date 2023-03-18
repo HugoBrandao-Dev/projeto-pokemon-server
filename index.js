@@ -121,7 +121,16 @@ app.post('/pokemons', (req, res) => {
 app.get('/pokemon/:id', (req, res) => {
   let pokemon_id = req.params.id
 
-  DATABASE.select().table('captured_pokemons').where({ 'captured_pokemons.id': pokemon_id })
+  DATABASE.select([
+    "captured_pokemons.id",
+    "captured_pokemons.chain_id",
+    "captured_pokemons.evolution_id",
+    "captured_pokemons.experience_plus",
+    "users_pokemons.user_id"
+  ])
+  .table('captured_pokemons')
+  .innerJoin('users_pokemons', 'users_pokemons.pokemon_id', 'captured_pokemons.id')
+  .where({ 'captured_pokemons.id': pokemon_id })
     .then(response => {
       if (response.length) {
         let pokemon = response[0]
