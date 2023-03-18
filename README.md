@@ -6,6 +6,9 @@ Projeto back-end de __portifólio__, que complementa o projeto front-end [Projet
 ### Framework(s)
 * Express JS: Criação de rotas que atenderão as requisições.
 
+### Biblioteca(s)
+* Express-session: Para trabalhar com a sessões de login do usuário.
+
 ### Banco de dados
 * MySQL: SGBD para armazenamento de dados.
 
