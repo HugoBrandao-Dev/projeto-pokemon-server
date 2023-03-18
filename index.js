@@ -100,8 +100,8 @@ app.post('/capture', (req, res) => {
   capturePokemon()
 })
 
-app.get('/pokemons', (req, res) => {
-  let id_user = 1
+app.post('/pokemons', (req, res) => {
+  let user_id = req.body.user_id
 
   DATABASE.select([
     'captured_pokemons.id',
@@ -109,14 +109,9 @@ app.get('/pokemons', (req, res) => {
     'captured_pokemons.evolution_id',
     'captured_pokemons.experience_plus']).table('users_pokemons')
   .innerJoin('captured_pokemons', 'captured_pokemons.id', 'users_pokemons.pokemon_id')
-  .where({ 'users_pokemons.user_id': id_user })
+  .where({ 'users_pokemons.user_id': user_id })
     .then(response => {
-      if (response.length) {
-        let pokemons = response[0]
-        res.send(pokemons)
-      } else {
-        res.send('O usuário não tem pokemons.')
-      }
+      res.send(response)
     })
     .catch(error => {
       console.log(error)
