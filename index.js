@@ -57,8 +57,19 @@ app.get('/logout', (req, res) => {
   res.send('Usuário deslogado com sucesso.')
 })
 
-app.get("/register", (req, res) => {
-  DATABASE.insert(FAKE_FORMS.forRegister[0]).into('users')
+app.post("/register", (req, res) => {
+  let full_name = req.body.full_name
+  let born_date = req.body.born_date
+  let email = req.body.email
+  let user_password = req.body.user_password
+
+  DATABASE.insert({
+    full_name,
+    born_date,
+    email,
+    user_password
+  })
+  .into('users')
     .then(response => {
       res.send('Usuário cadastrado com sucesso.')
     })
