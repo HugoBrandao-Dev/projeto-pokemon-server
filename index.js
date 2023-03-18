@@ -52,6 +52,11 @@ app.post('/login', (req, res) => {
     })
 })
 
+app.get('/logout', (req, res) => {
+  req.session.destroy()
+  res.send('Usuário deslogado com sucesso.')
+})
+
 app.get("/register", (req, res) => {
   DATABASE.insert(FAKE_FORMS.forRegister[0]).into('users')
     .then(response => {
