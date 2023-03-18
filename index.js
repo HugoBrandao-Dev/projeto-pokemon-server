@@ -27,14 +27,18 @@ let FAKE_FORMS = {
 }
 
 app.get('/login', (req, res) => {
-  let email = FAKE_FORMS.forLogin[0].email
-  let user_password = FAKE_FORMS.forLogin[0].user_password
+  let email = req.body.email
+  let user_password = req.body.user_password
 
-  DATABASE.select(['email', 'user_password']).where({ email }).table('users')
+  DATABASE.select().where({ email }).table('users')
     .then(response => {
       if (response.length) {
         let user = response[0]
         if (user.user_password === user_password) {
+          req.session.id = user.id
+          req.session.full_name = user.full_name
+          req.session.born_date = user.born_date
+          req.session.email = user.email
           res.send('Logado com sucesso.')
         } else {
           res.send('Senha inválida.')
