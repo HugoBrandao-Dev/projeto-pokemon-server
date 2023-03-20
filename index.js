@@ -244,27 +244,37 @@ app.post('/pokemons', (req, res) => {
 app.get('/pokemon/:id', (req, res) => {
   let pokemon_id = req.params.id
 
-  DATABASE.select([
-    "captured_pokemons.id",
-    "captured_pokemons.chain_id",
-    "captured_pokemons.evolution_id",
-    "captured_pokemons.experience_plus",
-    "users_pokemons.user_id"
-  ])
-  .table('captured_pokemons')
-  .innerJoin('users_pokemons', 'users_pokemons.pokemon_id', 'captured_pokemons.id')
-  .where({ 'captured_pokemons.id': pokemon_id })
-    .then(response => {
-      if (response.length) {
-        let pokemon = response[0]
-        res.send(pokemon)
-      } else {
-        res.send('Pokemon não encontrado.')
-      }
-    })
-    .catch(error => {
-      console.log(error)
-    })
+  // Validando campos
+  let is_pokemon_id_OK = validator.isInt(pokemon_id, {
+    min: 1,
+    allow_leading_zeroes: false
+  })
+
+  if (is_pokemon_id_OK) {
+    DATABASE.select([
+      "captured_pokemons.id",
+      "captured_pokemons.chain_id",
+      "captured_pokemons.evolution_id",
+      "captured_pokemons.experience_plus",
+      "users_pokemons.user_id"
+    ])
+    .table('captured_pokemons')
+    .innerJoin('users_pokemons', 'users_pokemons.pokemon_id', 'captured_pokemons.id')
+    .where({ 'captured_pokemons.id': pokemon_id })
+      .then(response => {
+        if (response.length) {
+          let pokemon = response[0]
+          res.send(pokemon)
+        } else {
+          res.send('Pokemon não encontrado.')
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    } else {
+      res.send('O ID do pokemon é inválido.')
+    }
 })
 
 // O id é o ID do usuário.
