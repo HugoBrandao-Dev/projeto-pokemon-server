@@ -1,7 +1,13 @@
 const express = require('express')
-const session = require('express-session')
 const app = express()
+
+const session = require('express-session')
+const validator = require('validator')
+
 const DATABASE = require('./database/connection.js')
+const acceptableCharacters = {
+  inPassword: '.@#%&*!@_',
+}
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
@@ -17,7 +23,13 @@ app.post('/login', (req, res) => {
   let email = req.body.email
   let user_password = req.body.user_password
 
-  DATABASE.select().where({ email }).table('users')
+  let emailOK = validator.isEmail(email)
+  let user_passwordOK = validator.isAlphanumeric(user_password, ['pt-BR'], {
+    ignore: acceptableCharacters.inPassword
+  })
+
+  if (emailOK && user_passwordOK) {
+    DATABASE.select().where({ email }).table('users')
     .then(response => {
       if (response.length) {
         let user = response[0]
@@ -37,6 +49,14 @@ app.post('/login', (req, res) => {
     .catch(error => {
       console.log(error)
     })
+  } else {
+    if (!emailOK) {
+      res.send('Email inválido.')
+    }
+    if (!user_passwordOK) {
+      res.send('Senha inválida.')
+    }
+  }
 })
 
 app.get('/logout', (req, res) => {
