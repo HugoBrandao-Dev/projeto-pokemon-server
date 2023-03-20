@@ -24,12 +24,12 @@ app.post('/login', (req, res) => {
   let email = req.body.email
   let user_password = req.body.user_password
 
-  let emailOK = validator.isEmail(email)
-  let user_passwordOK = validator.isAlphanumeric(user_password, ['pt-BR'], {
+  let is_email_OK = validator.isEmail(email)
+  let is_user_password_OK = validator.isAlphanumeric(user_password, ['pt-BR'], {
     ignore: acceptableCharacters.inPassword
   })
 
-  if (emailOK && user_passwordOK) {
+  if (is_email_OK && is_user_password_OK) {
     DATABASE.select().where({ email }).table('users')
     .then(response => {
       if (response.length) {
@@ -51,10 +51,10 @@ app.post('/login', (req, res) => {
       console.log(error)
     })
   } else {
-    if (!emailOK) {
+    if (!is_email_OK) {
       res.send('Email inválido.')
     }
-    if (!user_passwordOK) {
+    if (!is_user_password_OK) {
       res.send('Senha inválida.')
     }
   }
@@ -71,16 +71,16 @@ app.post("/register", (req, res) => {
   let email = req.body.email
   let user_password = req.body.user_password
 
-  let full_nameOK = validator.isAlpha(full_name, ['pt-BR'], {
+  let is_full_name_OK = validator.isAlpha(full_name, ['pt-BR'], {
     ignore: acceptableCharacters.inName
   })
-  let emailOK = validator.isEmail(email)
-  let born_dateOK = validator.isDate(born_date)
-  let user_passwordOK = validator.isAlphanumeric(user_password, ['pt-BR'], {
+  let is_email_OK = validator.isEmail(email)
+  let is_born_date_OK = validator.isDate(born_date)
+  let is_user_password_OK = validator.isAlphanumeric(user_password, ['pt-BR'], {
     ignore: acceptableCharacters.inPassword
   })
 
-  if (full_nameOK && emailOK && born_dateOK && user_passwordOK) {
+  if (is_full_name_OK && is_email_OK && is_born_date_OK && is_user_password_OK) {
     DATABASE.insert({
     full_name,
     born_date,
@@ -95,16 +95,16 @@ app.post("/register", (req, res) => {
         console.log(error)
       })
   } else {
-    if (!full_nameOK) {
+    if (!is_full_name_OK) {
       res.send('Nome inválido.')
     }
-    if (!emailOK) {
+    if (!is_email_OK) {
       res.send('Email inválido.')
     }
-    if (!born_dateOK) {
+    if (!is_born_date_OK) {
       res.send('Data de nascimento inválida.')
     }
-    if (!user_passwordOK) {
+    if (!is_user_password_OK) {
       res.send('Senha inválida.')
     }
   }
