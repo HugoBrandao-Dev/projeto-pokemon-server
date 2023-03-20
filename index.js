@@ -7,6 +7,7 @@ const validator = require('validator')
 const DATABASE = require('./database/connection.js')
 const acceptableCharacters = {
   inPassword: '.@#%&*!@_',
+  inName: ' -\''
 }
 
 app.use(express.urlencoded({ extended: false }))
@@ -70,19 +71,43 @@ app.post("/register", (req, res) => {
   let email = req.body.email
   let user_password = req.body.user_password
 
-  DATABASE.insert({
+  let full_nameOK = validator.isAlpha(full_name, ['pt-BR'], {
+    ignore: acceptableCharacters.inName
+  })
+  let emailOK = validator.isEmail(email)
+  let born_dateOK = validator.isDate(born_date)
+  let user_passwordOK = validator.isAlphanumeric(user_password, ['pt-BR'], {
+    ignore: acceptableCharacters.inPassword
+  })
+
+  if (full_nameOK && emailOK && born_dateOK && user_passwordOK) {
+    DATABASE.insert({
     full_name,
     born_date,
     email,
     user_password
-  })
-  .into('users')
-    .then(response => {
-      res.send('Usuário cadastrado com sucesso.')
     })
-    .catch(error => {
-      console.log(error)
-    })
+    .into('users')
+      .then(response => {
+        res.send('Usuário cadastrado com sucesso.')
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  } else {
+    if (!full_nameOK) {
+      res.send('Nome inválido.')
+    }
+    if (!emailOK) {
+      res.send('Email inválido.')
+    }
+    if (!born_dateOK) {
+      res.send('Data de nascimento inválida.')
+    }
+    if (!user_passwordOK) {
+      res.send('Senha inválida.')
+    }
+  }
 })
 
 app.post('/capture', (req, res) => {
