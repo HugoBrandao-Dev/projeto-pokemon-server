@@ -130,6 +130,7 @@ app.post('/capture', (req, res) => {
   })
   let is_evolution_id_OK = validator.isInt(evolution_id, {
     min: 1,
+    max: 3,
     allow_leading_zeroes: false
   })
   let is_experience_plus_OK = validator.isInt(experience_plus, {
