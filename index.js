@@ -348,21 +348,30 @@ app.post('/balls', (req, res) => {
 app.get('/fruits/:id', (req, res) => {
   let user_id = req.params.id
 
-  DATABASE.select([
-    'items.id',
-    'items.item',
-    'users_items.amount'
-  ]).table('users_items')
-  .innerJoin('items', 'items.id', 'users_items.item_id')
-  .innerJoin('items_types', 'items_types.id', 'items.type_id')
-  .where({'users_items.user_id': user_id, 'items_types.type_name': 'fruit'})
-    .then(response => {
-      if (response.length) {
-        res.send(response)
-      } else {
-        res.send('Usuário não possui frutas.')
-      }
-    })
+  let is_user_id_OK = validator.isInt(user_id, {
+    min: 1,
+    allow_leading_zeroes: false
+  })
+
+  if (is_user_id_OK) {
+    DATABASE.select([
+      'items.id',
+      'items.item',
+      'users_items.amount'
+    ]).table('users_items')
+    .innerJoin('items', 'items.id', 'users_items.item_id')
+    .innerJoin('items_types', 'items_types.id', 'items.type_id')
+    .where({'users_items.user_id': user_id, 'items_types.type_name': 'fruit'})
+      .then(response => {
+        if (response.length) {
+          res.send(response)
+        } else {
+          res.send('Usuário não possui frutas.')
+        }
+      })
+  } else {
+    res.send('O ID do usuário é inválido.')
+  }
 })
 
 app.post('/fruits', (req, res) => {
