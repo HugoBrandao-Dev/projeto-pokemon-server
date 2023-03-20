@@ -311,37 +311,77 @@ app.get('/balls/:id', (req, res) => {
 
 app.post('/balls', (req, res) => {
   let user_id = req.body.id
+  let poke_ball = req.body['poke-ball']
+  let great_ball = req.body['great-ball']
+  let ultra_ball = req.body['ultra-ball']
+  let master_ball = req.body['master-ball']
 
-  async function setBallsAmount() {
-    try {
-      await DATABASE.update({ amount: req.body['poke-ball'] })
-      .where({ user_id, item_id: 1 })
-      .table('users_items')
+  // Validando campos
+  let is_user_id_OK = validator.isInt(user_id, {
+    min: 1,
+    allow_leading_zeroes: false
+  })
+  let is_poke_ball_OK = validator.isInt(poke_ball, {
+    allow_leading_zeroes: false
+  })
+  let is_great_ball_OK = validator.isInt(great_ball, {
+    allow_leading_zeroes: false
+  })
+  let is_master_ball_OK = validator.isInt(ultra_ball, {
+    allow_leading_zeroes: false
+  })
+  let is_ultra_ball_OK = validator.isInt(master_ball, {
+    allow_leading_zeroes: false
+  })
 
-      await DATABASE.update({ amount: req.body['great-ball'] })
-      .where({ user_id, item_id: 2 })
-      .table('users_items')
+  if (is_user_id_OK && is_poke_ball_OK && is_great_ball_OK && is_ultra_ball_OK && is_master_ball_OK) {
+    async function setBallsAmount() {
+      try {
+        await DATABASE.update({ amount: poke_ball })
+        .where({ user_id, item_id: 1 })
+        .table('users_items')
 
-      await DATABASE.update({ amount: req.body['ultra-ball'] })
-      .where({ user_id, item_id: 3 })
-      .table('users_items')
+        await DATABASE.update({ amount: great_ball })
+        .where({ user_id, item_id: 2 })
+        .table('users_items')
 
-      await DATABASE.update({ amount: req.body['master-ball'] })
-      .where({ user_id, item_id: 4 })
-      .table('users_items')
+        await DATABASE.update({ amount: ultra_ball })
+        .where({ user_id, item_id: 3 })
+        .table('users_items')
 
-    } catch (error) {
-      console.log(error)
+        await DATABASE.update({ amount: master_ball })
+        .where({ user_id, item_id: 4 })
+        .table('users_items')
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    setBallsAmount()
+      .then(response => {
+        res.send("Informações de poke-bolas guardadas.")
+      })
+      .catch(error => {
+        res.send("Erro ao guardada informações das poke-bolas.")
+      })
+  } else {
+    if (!is_user_id_OK) {
+      res.send('O ID do usuário é inválido.')
+    }
+    if (!is_poke_ball_OK) {
+      res.send('A quantidade de POKE BALL é inválida.')
+    }
+    if (!is_great_ball_OK) {
+      res.send('A quantidade de GREAT BALL é inválida.')
+    }
+    if (!is_ultra_ball_OK) {
+      res.send('A quantidade de ULTRA BALL é inválida.')
+    }
+    if (!is_master_ball_OK) {
+      res.send('A quantidade de MASTER BALL é inválida.')
     }
   }
-
-  setBallsAmount()
-    .then(response => {
-      res.send("Informações de poke-bolas guardadas.")
-    })
-    .catch(error => {
-      res.send("Erro ao guardada informações das poke-bolas.")
-    })
 })
 
 // O id é o ID do usuário.
