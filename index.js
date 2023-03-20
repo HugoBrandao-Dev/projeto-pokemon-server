@@ -416,33 +416,66 @@ app.get('/fruits/:id', (req, res) => {
 
 app.post('/fruits', (req, res) => {
   let user_id = req.body.id
+  let jaboca_berry = req.body['jaboca-berry']
+  let razz_berry = req.body['razz-berry']
+  let bluk_berry = req.body['bluk-berry']
 
-  async function setFruitsAmount() {
-    try {
-      await DATABASE.update({ amount: req.body['jaboca-berry'] })
-      .where({ user_id, item_id: 5 })
-      .table('users_items')
+  // Validando campos
+  let is_user_id_OK = validator.isInt(user_id, {
+    min: 1,
+    allow_leading_zeroes: false
+  })
+  let is_jaboca_berry_OK = validator.isInt(jaboca_berry, {
+    allow_leading_zeroes: false
+  })
+  let is_razz_berry_OK = validator.isInt(razz_berry, {
+    allow_leading_zeroes: false
+  })
+  let is_bluk_berry_OK = validator.isInt(bluk_berry, {
+    allow_leading_zeroes: false
+  })
 
-      await DATABASE.update({ amount: req.body['razz-berry'] })
-      .where({ user_id, item_id: 6 })
-      .table('users_items')
+  if (is_user_id_OK && is_jaboca_berry_OK && is_razz_berry_OK && is_bluk_berry_OK) {
+    async function setFruitsAmount() {
+      try {
+        await DATABASE.update({ amount: req.body['jaboca-berry'] })
+        .where({ user_id, item_id: 5 })
+        .table('users_items')
 
-      await DATABASE.update({ amount: req.body['bluk-berry'] })
-      .where({ user_id, item_id: 7 })
-      .table('users_items')
+        await DATABASE.update({ amount: req.body['razz-berry'] })
+        .where({ user_id, item_id: 6 })
+        .table('users_items')
 
-    } catch (error) {
-      console.log(error)
+        await DATABASE.update({ amount: req.body['bluk-berry'] })
+        .where({ user_id, item_id: 7 })
+        .table('users_items')
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    setFruitsAmount()
+      .then(response => {
+        res.send("Informações de frutas guardadas.")
+      })
+      .catch(error => {
+        res.send("Erro ao guardada informações das frutas.")
+      })
+  } else {
+    if (!is_user_id_OK) {
+      res.send('O ID do usuário é inválido.')
+    }
+    if (!is_jaboca_berry_OK) {
+      res.send('A quantidade de JABOCA BERRY é inválida.')
+    }
+    if (!is_razz_berry_OK) {
+      res.send('A quantidade de RAZZ BERRY é inválida.')
+    }
+    if (!is_bluk_berry_OK) {
+      res.send('A quantidade de BLUK BERRY é inválida.')
     }
   }
-
-  setFruitsAmount()
-    .then(response => {
-      res.send("Informações de frutas guardadas.")
-    })
-    .catch(error => {
-      res.send("Erro ao guardada informações das frutas.")
-    })
 })
 
 app.listen(4000, error => {
