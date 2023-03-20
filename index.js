@@ -13,19 +13,6 @@ app.use(session({
   }
 }))
 
-let FAKE_FORMS = {
-  forLogin: [{
-    email: 'tobias@gmail.com',
-    user_password: 'tobias123'
-  }],
-  forRegister: [{
-    full_name: 'Tobias de Oliveira',
-    born_date: '1975-03-15',
-    email: 'tobias@gmail.com',
-    user_password: 'tobias123'
-  }]
-}
-
 app.post('/login', (req, res) => {
   let email = req.body.email
   let user_password = req.body.user_password
