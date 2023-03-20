@@ -281,21 +281,31 @@ app.get('/pokemon/:id', (req, res) => {
 app.get('/balls/:id', (req, res) => {
   let user_id = req.params.id
 
-  DATABASE.select([
-    'items.id',
-    'items.item',
-    'users_items.amount'
-  ]).table('users_items')
-  .innerJoin('items', 'items.id', 'users_items.item_id')
-  .innerJoin('items_types', 'items_types.id', 'items.type_id')
-  .where({'users_items.user_id': user_id, 'items_types.type_name': 'ball'})
-    .then(response => {
-      if (response.length) {
-        res.send(response)
-      } else {
-        res.send('Usuário não possui poke-bolas.')
-      }
-    })
+  // Validando campos
+  let is_user_id_OK = validator.isInt(user_id, {
+    min: 1,
+    allow_leading_zeroes: false
+  })
+
+  if (is_user_id_OK) {
+    DATABASE.select([
+      'items.id',
+      'items.item',
+      'users_items.amount'
+    ]).table('users_items')
+    .innerJoin('items', 'items.id', 'users_items.item_id')
+    .innerJoin('items_types', 'items_types.id', 'items.type_id')
+    .where({'users_items.user_id': user_id, 'items_types.type_name': 'ball'})
+      .then(response => {
+        if (response.length) {
+          res.send(response)
+        } else {
+          res.send('Usuário não possui poke-bolas.')
+        }
+      })
+  } else {
+    res.send('O ID do usuário é inválido.')
+  }
 })
 
 
