@@ -175,13 +175,39 @@ app.post('/upgradePokemon', (req, res) => {
   let evolution_id = req.body.evolution_id
   let experience_plus = req.body.experience_plus
 
-  DATABASE.update({ evolution_id, experience_plus }).where({ id }).table('captured_pokemons')
-    .then(response => {
-      res.send('Informações do pokemon atualizadas com sucesso.')
-    })
-    .catch(error => {
-      console.log(error)
-    })
+  // Validando campos
+  let is_id_OK = validator.isInt(id, {
+    min: 1,
+    allow_leading_zeroes: false
+  })
+  let is_evolution_id_OK = validator.isInt(evolution_id, {
+    min: 1,
+    max: 3,
+    allow_leading_zeroes: false
+  })
+  let is_experience_plus_OK = validator.isInt(experience_plus, {
+    allow_leading_zeroes: false
+  })
+
+  if (is_id_OK && is_evolution_id_OK && is_experience_plus_OK) {
+    DATABASE.update({ evolution_id, experience_plus }).where({ id }).table('captured_pokemons')
+      .then(response => {
+        res.send('Informações do pokemon atualizadas com sucesso.')
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  } else {
+    if (!is_id_OK) {
+      res.send('ID do pokemon inválido.')
+    }
+    if (!is_evolution_id_OK) {
+      res.send('ID da evolução inválido.')
+    }
+    if (!is_experience_plus_OK) {
+      res.send('Valor da experiência adicional está inválido.')
+    }
+  }
 })
 
 app.post('/pokemons', (req, res) => {
