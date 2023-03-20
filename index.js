@@ -119,17 +119,49 @@ app.post('/capture', (req, res) => {
   let evolution_id = req.body.evolution_id
   let experience_plus = req.body.experience_plus
 
-  async function capturePokemon() {
-    try {
-      let pokemon_id = await DATABASE.insert({ chain_id, evolution_id, experience_plus }) .into('captured_pokemons')
-      await DATABASE.insert({ user_id, pokemon_id}).into('users_pokemons')
-      res.send('Pokemon capturado com sucesso.')
-    } catch (error) {
-      console.log(error)
+  // Validando campos
+  let is_user_id_OK = validator.isInt(user_id, {
+    min: 1,
+    allow_leading_zeroes: false
+  })
+  let is_chain_id_OK = validator.isInt(chain_id, {
+    min: 1,
+    allow_leading_zeroes: false
+  })
+  let is_evolution_id_OK = validator.isInt(evolution_id, {
+    min: 1,
+    allow_leading_zeroes: false
+  })
+  let is_experience_plus_OK = validator.isInt(experience_plus, {
+    allow_leading_zeroes: false
+  })
+
+  if (is_user_id_OK && is_chain_id_OK && is_evolution_id_OK && is_experience_plus_OK) {
+    async function capturePokemon() {
+      try {
+        let pokemon_id = await DATABASE.insert({ chain_id, evolution_id, experience_plus }) .into('captured_pokemons')
+        await DATABASE.insert({ user_id, pokemon_id}).into('users_pokemons')
+        res.send('Pokemon capturado com sucesso.')
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    capturePokemon()
+  } else {
+    if (!is_user_id_OK) {
+      res.send('ID do usuário inválido.')
+    }
+    if (!is_chain_id_OK) {
+      res.send('ID da chain inválido.')
+    }
+    if (!is_evolution_id_OK) {
+      res.send('ID da evolução inválido.')
+    }
+    if (!is_experience_plus_OK) {
+      res.send('Valor da experiência adicional está inválido.')
     }
   }
-
-  capturePokemon()
 })
 
 /*
