@@ -214,19 +214,31 @@ app.post('/upgradePokemon', (req, res) => {
 app.post('/pokemons', (req, res) => {
   let user_id = req.body.user_id
 
-  DATABASE.select([
+  // Validando campos
+  let is_user_id_OK = validator.isInt(user_id, {
+    min: 1,
+    allow_leading_zeroes: false
+  })
+
+  if (is_user_id_OK) {
+    DATABASE.select([
     'captured_pokemons.id',
     'captured_pokemons.chain_id',
     'captured_pokemons.evolution_id',
     'captured_pokemons.experience_plus']).table('users_pokemons')
-  .innerJoin('captured_pokemons', 'captured_pokemons.id', 'users_pokemons.pokemon_id')
-  .where({ 'users_pokemons.user_id': user_id })
-    .then(response => {
-      res.send(response)
-    })
-    .catch(error => {
-      console.log(error)
-    })
+    .innerJoin('captured_pokemons', 'captured_pokemons.id', 'users_pokemons.pokemon_id')
+    .where({ 'users_pokemons.user_id': user_id })
+      .then(response => {
+        res.send(response)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  } else {
+    if (!is_user_id_OK) {
+      res.send('ID do usuário inválido.')
+    }
+  }
 })
 
 app.get('/pokemon/:id', (req, res) => {
