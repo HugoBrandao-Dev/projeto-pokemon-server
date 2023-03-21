@@ -5,6 +5,7 @@ const session = require('express-session')
 const validator = require('validator')
 
 const DATABASE = require('./database/connection.js')
+const auth = require('./middlewares/auth.js')
 const acceptableCharacters = {
   inPassword: '.@#%&*!@_',
   inName: ' -\''
@@ -112,7 +113,7 @@ app.post("/register", (req, res) => {
   }
 })
 
-app.post('/capture', (req, res) => {
+app.post('/capture', auth, (req, res) => {
   // ID do usuário que capturou o pokemon, geralmente o próprio usuário que estará logado na sessão.
   let user_id = req.body.user_id
 
@@ -170,7 +171,7 @@ app.post('/capture', (req, res) => {
 /*
 Essa rota é responsável por alterar as informações do pokemon, podendo ser usada tanto para acrescentar Exp, quanto para evoluir o pokemon.
 */
-app.post('/upgradePokemon', (req, res) => {
+app.post('/upgradePokemon', auth, (req, res) => {
   // A atualização dos status, tem como base o ID do pokemon
   let id = req.body.id
 
@@ -214,7 +215,7 @@ app.post('/upgradePokemon', (req, res) => {
 })
 
 // Faz a listagem de pokemons que o usuário já capturou.
-app.get('/user/:id/pokemons', (req, res) => {
+app.get('/user/:id/pokemons', auth, (req, res) => {
   let user_id = req.params.id
 
   // Validando campos
@@ -244,7 +245,7 @@ app.get('/user/:id/pokemons', (req, res) => {
   }
 })
 
-app.get('user/pokemon/:id', (req, res) => {
+app.get('user/pokemon/:id', auth, (req, res) => {
   let pokemon_id = req.params.id
 
   // Validando campos
@@ -284,7 +285,7 @@ app.get('user/pokemon/:id', (req, res) => {
 Faz a busca pelas quantidades de cada pokebola que o usuário possui.
 id: ID do usuário.
 */
-app.get('/user/:id/balls', (req, res) => {
+app.get('/user/:id/balls', auth, (req, res) => {
   let user_id = req.params.id
 
   // Validando campos
@@ -315,7 +316,7 @@ app.get('/user/:id/balls', (req, res) => {
 })
 
 
-app.post('/balls', (req, res) => {
+app.post('/balls', auth, (req, res) => {
   let user_id = req.body.id
   let poke_ball = req.body['poke-ball']
   let great_ball = req.body['great-ball']
@@ -394,7 +395,7 @@ app.post('/balls', (req, res) => {
 Faz a busca pelas quantidades de cada fruta que o usuário possui.
 id: ID do usuário.
 */
-app.get('/user/:id/fruits', (req, res) => {
+app.get('/user/:id/fruits', auth, (req, res) => {
   let user_id = req.params.id
 
   let is_user_id_OK = validator.isInt(user_id, {
@@ -423,7 +424,7 @@ app.get('/user/:id/fruits', (req, res) => {
   }
 })
 
-app.post('/fruits', (req, res) => {
+app.post('/fruits', auth, (req, res) => {
   let user_id = req.body.id
   let jaboca_berry = req.body['jaboca-berry']
   let razz_berry = req.body['razz-berry']
