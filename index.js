@@ -36,9 +36,9 @@ app.post('/login', (req, res) => {
         let user = response[0]
         if (user.user_password === user_password) {
           req.session.user = {
-            id: user.id
-            full_name: user.full_name
-            born_date: user.born_date
+            id: user.id,
+            full_name: user.full_name,
+            born_date: user.born_date,
             email: user.email
           }
           res.send('Logado com sucesso.')
