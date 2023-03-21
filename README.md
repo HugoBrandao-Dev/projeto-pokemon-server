@@ -7,7 +7,9 @@ Projeto back-end de __portifólio__, que complementa o projeto front-end [Projet
 * Express JS: Criação de rotas que atenderão as requisições.
 
 ### Biblioteca(s)
-* Express-session: Para trabalhar com a sessões de login do usuário.
+* Express-session: Para trabalhar com a sessões de login do usuário;
+* ValidatorJS: Para validação de campos de formulário;
+* BcryptJS: Para geração de hash, sendo utilizada para criar hash a partir de uma senha.
 
 ### Banco de dados
 * MySQL: SGBD para armazenamento de dados.
