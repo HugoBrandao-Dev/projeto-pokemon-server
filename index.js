@@ -35,10 +35,12 @@ app.post('/login', (req, res) => {
       if (response.length) {
         let user = response[0]
         if (user.user_password === user_password) {
-          req.session.id = user.id
-          req.session.full_name = user.full_name
-          req.session.born_date = user.born_date
-          req.session.email = user.email
+          req.session.user = {
+            id: user.id
+            full_name: user.full_name
+            born_date: user.born_date
+            email: user.email
+          }
           res.send('Logado com sucesso.')
         } else {
           res.send('Senha inválida.')
