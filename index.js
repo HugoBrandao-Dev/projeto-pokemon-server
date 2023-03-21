@@ -2,7 +2,10 @@ const express = require('express')
 const app = express()
 
 const session = require('express-session')
+
+// Bibliotecas
 const validator = require('validator')
+const bcrypt = require('bcryptjs')
 
 const DATABASE = require('./database/connection.js')
 const auth = require('./middlewares/auth.js')
@@ -84,11 +87,15 @@ app.post("/register", (req, res) => {
   })
 
   if (is_full_name_OK && is_email_OK && is_born_date_OK && is_user_password_OK) {
+    let salt = bcrypt.genSaltSync(8)
+
+    let password_hash = bcrypt.hashSync(user_password, salt)
+
     DATABASE.insert({
     full_name,
     born_date,
     email,
-    user_password
+    user_password: password_hash
     })
     .into('users')
       .then(response => {
