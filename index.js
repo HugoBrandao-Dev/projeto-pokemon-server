@@ -211,8 +211,9 @@ app.post('/upgradePokemon', (req, res) => {
   }
 })
 
-app.post('/pokemons', (req, res) => {
-  let user_id = req.body.user_id
+// Faz a listagem de pokemons que o usuário já capturou.
+app.get('/user/:id/pokemons', (req, res) => {
+  let user_id = req.params.id
 
   // Validando campos
   let is_user_id_OK = validator.isInt(user_id, {
@@ -241,7 +242,7 @@ app.post('/pokemons', (req, res) => {
   }
 })
 
-app.get('/pokemon/:id', (req, res) => {
+app.get('user/pokemon/:id', (req, res) => {
   let pokemon_id = req.params.id
 
   // Validando campos
