@@ -278,8 +278,11 @@ app.get('user/pokemon/:id', (req, res) => {
     }
 })
 
-// O id é o ID do usuário.
-app.get('/balls/:id', (req, res) => {
+/*
+Faz a busca pelas quantidades de cada pokebola que o usuário possui.
+id: ID do usuário.
+*/
+app.get('/user/:id/balls', (req, res) => {
   let user_id = req.params.id
 
   // Validando campos
