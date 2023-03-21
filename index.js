@@ -388,8 +388,11 @@ app.post('/balls', (req, res) => {
   }
 })
 
-// O id é o ID do usuário.
-app.get('/fruits/:id', (req, res) => {
+/*
+Faz a busca pelas quantidades de cada fruta que o usuário possui.
+id: ID do usuário.
+*/
+app.get('/user/:id/fruits', (req, res) => {
   let user_id = req.params.id
 
   let is_user_id_OK = validator.isInt(user_id, {
