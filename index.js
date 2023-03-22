@@ -38,7 +38,7 @@ app.post('/login', (req, res) => {
     .then(response => {
       if (response.length) {
         let user = response[0]
-        if (user.user_password === user_password) {
+        if (bcrypt.compareSync(user_password, user.user_password)) {
           req.session.user = {
             id: user.id,
             full_name: user.full_name,
