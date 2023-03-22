@@ -97,7 +97,7 @@ app.post("/register", (req, res) => {
 
         // Verifica se já o email já foi cadastrado.
         if (resEmail.length) {
-          res.send('Email já cadastrado.')
+          res.json({ errorField: 'iptEmail', msg: 'Email já cadastrado' })
         } else {
           let salt = bcrypt.genSaltSync(8)
 
@@ -111,7 +111,7 @@ app.post("/register", (req, res) => {
           })
           .into('users')
 
-          res.send('Usuário cadastrado com sucesso.')
+          res.json({ errorField: '' })
         }
       } catch (error) {
         console.error(error)
@@ -120,16 +120,16 @@ app.post("/register", (req, res) => {
     registerUser()
   } else {
     if (!is_full_name_OK) {
-      res.send('Nome inválido.')
+      res.json({ errorField: 'iptName', msg: 'Nome inválido.' })
     }
     if (!is_email_OK) {
-      res.send('Email inválido.')
+      res.json({ errorField: 'iptEmail', msg: 'Email inválido.' })
     }
     if (!is_born_date_OK) {
-      res.send('Data de nascimento inválida.')
+      res.json({ errorField: 'iptBornDate', msg: 'Data de nascimento inválida.' })
     }
     if (!is_user_password_OK) {
-      res.send('Senha inválida.')
+      res.json({ errorField: 'iptPassword', msg: 'Senha inválida.' })
     }
   }
 })
