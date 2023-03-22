@@ -71,7 +71,7 @@ app.post('/login', (req, res) => {
 
 app.get('/logout', (req, res) => {
   req.session.destroy()
-  res.send('Usuário deslogado com sucesso.')
+  res.json({ errorField: '' })
 })
 
 app.post("/register", (req, res) => {
