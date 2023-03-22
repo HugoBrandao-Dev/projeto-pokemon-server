@@ -48,12 +48,12 @@ app.post('/login', (req, res) => {
             born_date: user.born_date,
             email: user.email
           }
-          res.send('Logado com sucesso.')
+          res.json({ errorField: '' })
         } else {
-          res.send('Senha inválida.')
+          res.json({ errorField: 'iptPassword', msg: 'Senha inválida.' })
         }
       } else {
-        res.send('Usuário não encontrado.')
+        res.json({ errorField: 'iptLogin', msg: 'Email não cadastrado.' })
       }
     })
     .catch(error => {
