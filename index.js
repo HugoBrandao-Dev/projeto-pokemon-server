@@ -87,23 +87,34 @@ app.post("/register", (req, res) => {
   })
 
   if (is_full_name_OK && is_email_OK && is_born_date_OK && is_user_password_OK) {
-    let salt = bcrypt.genSaltSync(8)
+    async function registerUser() {
+      try {
+        // Busca um email igual
+        let resEmail = await DATABASE.select().where({ email }).table('users')
 
-    let password_hash = bcrypt.hashSync(user_password, salt)
+        // Verifica se já o email já foi cadastrado.
+        if (resEmail.length) {
+          res.send('Email já cadastrado.')
+        } else {
+          let salt = bcrypt.genSaltSync(8)
 
-    DATABASE.insert({
-    full_name,
-    born_date,
-    email,
-    user_password: password_hash
-    })
-    .into('users')
-      .then(response => {
-        res.send('Usuário cadastrado com sucesso.')
-      })
-      .catch(error => {
-        console.log(error)
-      })
+          let password_hash = bcrypt.hashSync(user_password, salt)
+
+          await DATABASE.insert({
+            full_name,
+            born_date,
+            email,
+            user_password: password_hash
+          })
+          .into('users')
+
+          res.send('Usuário cadastrado com sucesso.')
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    registerUser()
   } else {
     if (!is_full_name_OK) {
       res.send('Nome inválido.')
