@@ -534,23 +534,41 @@ app.post('/fruits', auth, (req, res) => {
 
     setFruitsAmount()
       .then(response => {
-        res.send("Informações de frutas guardadas.")
+        res.json({
+          errorField: "",
+          msg: "Informações de frutas guardadas."
+        })
       })
       .catch(error => {
-        res.send("Erro ao guardada informações das frutas.")
+        res.json({
+          errorField: "",
+          msg: "Erro ao guardada informações das frutas."
+        })
       })
   } else {
     if (!is_user_id_OK) {
-      res.send('O ID do usuário é inválido.')
+      res.json({
+        errorField: 'id',
+        msg: 'O ID do usuário é inválido.'
+      })
     }
     if (!is_jaboca_berry_OK) {
-      res.send('A quantidade de JABOCA BERRY é inválida.')
+      res.json({
+        errorField: 'jaboca-berry',
+        msg: 'A quantidade de JABOCA BERRY é inválida.'
+      })
     }
     if (!is_razz_berry_OK) {
-      res.send('A quantidade de RAZZ BERRY é inválida.')
+      res.json({
+        errorField: 'razz-berry',
+        msg: 'A quantidade de RAZZ BERRY é inválida.'
+      })
     }
     if (!is_bluk_berry_OK) {
-      res.send('A quantidade de BLUK BERRY é inválida.')
+      res.json({
+        errorField: 'bluk-berry',
+        msg: 'A quantidade de BLUK BERRY é inválida.'
+      })
     }
   }
 })
