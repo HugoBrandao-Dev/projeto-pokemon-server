@@ -275,7 +275,7 @@ app.get('/user/:id/pokemons', auth, (req, res) => {
   }
 })
 
-app.get('user/pokemon/:id', auth, (req, res) => {
+app.get('/user/pokemon/:id', auth, (req, res) => {
   let pokemon_id = req.params.id
 
   // Validando campos
@@ -298,16 +298,21 @@ app.get('user/pokemon/:id', auth, (req, res) => {
       .then(response => {
         if (response.length) {
           let pokemon = response[0]
-          res.send(pokemon)
+          res.json(pokemon)
         } else {
-          res.send('Pokemon não encontrado.')
+          res.json({
+            errorField: 'pokemon_id',
+            msg: 'Pokemon não encontrado.'
+          })
         }
       })
       .catch(error => {
-        console.log(error)
+        console.error(error)
       })
     } else {
-      res.send('O ID do pokemon é inválido.')
+      res.json({
+        errorField: 'pokemon_id',
+        msg: 'O ID do pokemon é inválido.'})
     }
 })
 
