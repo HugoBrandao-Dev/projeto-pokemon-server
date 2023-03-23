@@ -404,32 +404,48 @@ app.post('/balls', auth, (req, res) => {
         .table('users_items')
 
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
 
     setBallsAmount()
       .then(response => {
-        res.send("Informações de poke-bolas guardadas.")
+        res.json({
+          errorField: '',
+          msg: "Informações de poke-bolas guardadas."
+        })
       })
       .catch(error => {
-        res.send("Erro ao guardada informações das poke-bolas.")
+        res.json({
+          errorField: '',
+          msg: "Erro ao guardada informações das poke-bolas."
+        })
       })
   } else {
     if (!is_user_id_OK) {
-      res.send('O ID do usuário é inválido.')
+      res.json({
+        errorField: 'id',
+        msg: 'O ID do usuário é inválido.'})
     }
     if (!is_poke_ball_OK) {
-      res.send('A quantidade de POKE BALL é inválida.')
+      res.json({
+        errorField: 'poke-ball',
+        msg: 'A quantidade de POKE BALL é inválida.'})
     }
     if (!is_great_ball_OK) {
-      res.send('A quantidade de GREAT BALL é inválida.')
+      res.json({
+        errorField: 'great-ball',
+        msg: 'A quantidade de GREAT BALL é inválida.'})
     }
     if (!is_ultra_ball_OK) {
-      res.send('A quantidade de ULTRA BALL é inválida.')
+      res.json({
+        errorField: 'ultra-ball',
+        msg: 'A quantidade de ULTRA BALL é inválida.'})
     }
     if (!is_master_ball_OK) {
-      res.send('A quantidade de MASTER BALL é inválida.')
+      res.json({
+        errorField: 'master-ball',
+        msg: 'A quantidade de MASTER BALL é inválida.'})
     }
   }
 })
