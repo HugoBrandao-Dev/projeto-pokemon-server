@@ -340,13 +340,21 @@ app.get('/user/:id/balls', auth, (req, res) => {
     .where({'users_items.user_id': user_id, 'items_types.type_name': 'ball'})
       .then(response => {
         if (response.length) {
-          res.send(response)
+          res.json(response)
         } else {
-          res.send('Usuário não possui poke-bolas.')
+          res.json({
+            msg: 'Usuário não possui poke-bolas.'
+          })
         }
       })
+      .catch(error => {
+        console.error(error)
+      })
   } else {
-    res.send('O ID do usuário é inválido.')
+    res.json({
+      errorField: 'user_id',
+      msg: 'O ID do usuário é inválido.'
+    })
   }
 })
 
