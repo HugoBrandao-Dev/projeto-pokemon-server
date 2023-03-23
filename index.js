@@ -166,7 +166,7 @@ app.post('/capture', auth, (req, res) => {
       try {
         let pokemon_id = await DATABASE.insert({ chain_id, evolution_id, experience_plus }) .into('captured_pokemons')
         await DATABASE.insert({ user_id, pokemon_id}).into('users_pokemons')
-        res.send('Pokemon capturado com sucesso.')
+        res.json({ errorField: '' })
       } catch (error) {
         console.log(error)
       }
@@ -175,16 +175,16 @@ app.post('/capture', auth, (req, res) => {
     capturePokemon()
   } else {
     if (!is_user_id_OK) {
-      res.send('ID do usuário inválido.')
+      res.json({ errorField: 'user_id', msg: 'O ID do usuário é inválido.' })
     }
     if (!is_chain_id_OK) {
-      res.send('ID da chain inválido.')
+      res.json({ errorField: 'chain_id', msg: 'O ID da chain é inválido.' })
     }
     if (!is_evolution_id_OK) {
-      res.send('ID da evolução inválido.')
+      res.json({ errorField: 'evolution_id', msg: 'O ID da evolução é inválido.' })
     }
     if (!is_experience_plus_OK) {
-      res.send('Valor da experiência adicional está inválido.')
+      res.json({ errorField: 'experience_plus', msg: 'O valor da experiencia adicional é inválido.' })
     }
   }
 })
