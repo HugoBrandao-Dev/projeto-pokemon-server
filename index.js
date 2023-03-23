@@ -457,16 +457,21 @@ app.get('/user/:id/fruits', auth, (req, res) => {
     .where({'users_items.user_id': user_id, 'items_types.type_name': 'fruit'})
       .then(response => {
         if (response.length) {
-          res.send(response)
+          res.json(response)
         } else {
-          res.send('Usuário não possui frutas.')
+          res.json({
+            msg: 'Usuário não possui frutas.'
+          })
         }
       })
       .catch(error => {
         console.error(error)
       })
   } else {
-    res.send('O ID do usuário é inválido.')
+    res.json({
+      errorField: 'user_id',
+      msg: 'O ID do usuário é inválido.'
+    })
   }
 })
 
