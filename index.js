@@ -290,7 +290,7 @@ app.get('/user/pokemon/:id', auth, (req, res) => {
     ])
     .table('captured_pokemons')
     .innerJoin('users_pokemons', 'users_pokemons.pokemon_id', 'captured_pokemons.id')
-    .where({ 'captured_pokemons.id': pokemon_id })
+    .where({ 'captured_pokemons.id': pokemon_id, 'users_pokemons.user_id': req.session.user.id })
       .then(response => {
         if (response.length) {
           let pokemon = response[0]
