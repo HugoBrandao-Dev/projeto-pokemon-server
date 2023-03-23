@@ -254,34 +254,21 @@ app.post('/upgradePokemon', auth, (req, res) => {
 })
 
 // Faz a listagem de pokemons que o usuário já capturou.
-app.get('/user/:id/pokemons', auth, (req, res) => {
-  let user_id = req.params.id
-
-  // Validando campos
-  let is_user_id_OK = validator.isInt(user_id, {
-    min: 1,
-    allow_leading_zeroes: false
-  })
-
-  if (is_user_id_OK) {
-    DATABASE.select([
+app.get('/user/pokemons', auth, (req, res) => {
+  DATABASE.select([
     'captured_pokemons.id',
     'captured_pokemons.chain_id',
     'captured_pokemons.evolution_id',
-    'captured_pokemons.experience_plus']).table('users_pokemons')
-    .innerJoin('captured_pokemons', 'captured_pokemons.id', 'users_pokemons.pokemon_id')
-    .where({ 'users_pokemons.user_id': user_id })
-      .then(response => {
-        res.json(response)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  } else {
-    if (!is_user_id_OK) {
-      res.json({ errorField: 'user_id', msg: 'ID do usuário inválido.' })
-    }
-  }
+    'captured_pokemons.experience_plus'
+  ]).table('users_pokemons')
+  .innerJoin('captured_pokemons', 'captured_pokemons.id', 'users_pokemons.pokemon_id')
+  .where({ 'users_pokemons.user_id': req.session.user.id })
+    .then(response => {
+      res.json(response)
+    })
+    .catch(error => {
+      console.error(error)
+    })
 })
 
 app.get('/user/pokemon/:id', auth, (req, res) => {
