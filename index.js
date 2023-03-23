@@ -217,20 +217,29 @@ app.post('/upgradePokemon', auth, (req, res) => {
   if (is_id_OK && is_evolution_id_OK && is_experience_plus_OK) {
     DATABASE.update({ evolution_id, experience_plus }).where({ id }).table('captured_pokemons')
       .then(response => {
-        res.send('Informações do pokemon atualizadas com sucesso.')
+        res.json({ errorField: '' })
       })
       .catch(error => {
         console.log(error)
       })
   } else {
     if (!is_id_OK) {
-      res.send('ID do pokemon inválido.')
+      res.json({
+        errorField: 'id',
+        msg: 'O ID do pokemon é inválido.'
+      })
     }
     if (!is_evolution_id_OK) {
-      res.send('ID da evolução inválido.')
+      res.json({
+        errorField: 'evolution_id',
+        msg: 'O ID da evolução é inválido.'
+      })
     }
     if (!is_experience_plus_OK) {
-      res.send('Valor da experiência adicional está inválido.')
+      res.json({
+        errorField: 'experience_plus',
+        msg: 'O valor da experiencia adicional é inválido.'
+      })
     }
   }
 })
