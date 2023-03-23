@@ -263,14 +263,14 @@ app.get('/user/:id/pokemons', auth, (req, res) => {
     .innerJoin('captured_pokemons', 'captured_pokemons.id', 'users_pokemons.pokemon_id')
     .where({ 'users_pokemons.user_id': user_id })
       .then(response => {
-        res.send(response)
+        res.json(response)
       })
       .catch(error => {
         console.log(error)
       })
   } else {
     if (!is_user_id_OK) {
-      res.send('ID do usuário inválido.')
+      res.json({ errorField: 'user_id', msg: 'ID do usuário inválido.' })
     }
   }
 })
