@@ -316,42 +316,27 @@ app.get('/user/pokemon/:id', auth, (req, res) => {
 Faz a busca pelas quantidades de cada pokebola que o usuário possui.
 id: ID do usuário.
 */
-app.get('/user/:id/balls', auth, (req, res) => {
-  let user_id = req.params.id
-
-  // Validando campos
-  let is_user_id_OK = validator.isInt(user_id, {
-    min: 1,
-    allow_leading_zeroes: false
-  })
-
-  if (is_user_id_OK) {
-    DATABASE.select([
-      'items.id',
-      'items.item',
-      'users_items.amount'
-    ]).table('users_items')
-    .innerJoin('items', 'items.id', 'users_items.item_id')
-    .innerJoin('items_types', 'items_types.id', 'items.type_id')
-    .where({'users_items.user_id': user_id, 'items_types.type_name': 'ball'})
-      .then(response => {
-        if (response.length) {
-          res.json(response)
-        } else {
-          res.json({
-            msg: 'Usuário não possui poke-bolas.'
-          })
-        }
-      })
-      .catch(error => {
-        console.error(error)
-      })
-  } else {
-    res.json({
-      errorField: 'user_id',
-      msg: 'O ID do usuário é inválido.'
+app.get('/user/balls', auth, (req, res) => {
+  DATABASE.select([
+    'items.id',
+    'items.item',
+    'users_items.amount'
+  ]).table('users_items')
+  .innerJoin('items', 'items.id', 'users_items.item_id')
+  .innerJoin('items_types', 'items_types.id', 'items.type_id')
+  .where({'users_items.user_id': req.session.user.id, 'items_types.type_name': 'ball'})
+    .then(response => {
+      if (response.length) {
+        res.json(response)
+      } else {
+        res.json({
+          msg: 'Usuário não possui poke-bolas.'
+        })
+      }
     })
-  }
+    .catch(error => {
+      console.error(error)
+    })
 })
 
 
