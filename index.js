@@ -135,8 +135,6 @@ app.post("/register", (req, res) => {
 })
 
 app.post('/capture', auth, (req, res) => {
-  // ID do usuário que capturou o pokemon, geralmente o próprio usuário que estará logado na sessão.
-  let user_id = req.body.user_id
 
   // Informações do pokemon a serem cadastradas.
   let chain_id = req.body.chain_id
@@ -144,10 +142,6 @@ app.post('/capture', auth, (req, res) => {
   let experience_plus = req.body.experience_plus
 
   // Validando campos
-  let is_user_id_OK = validator.isInt(user_id, {
-    min: 1,
-    allow_leading_zeroes: false
-  })
   let is_chain_id_OK = validator.isInt(chain_id, {
     min: 1,
     allow_leading_zeroes: false
@@ -161,30 +155,45 @@ app.post('/capture', auth, (req, res) => {
     allow_leading_zeroes: false
   })
 
-  if (is_user_id_OK && is_chain_id_OK && is_evolution_id_OK && is_experience_plus_OK) {
+  if (is_chain_id_OK && is_evolution_id_OK && is_experience_plus_OK) {
     async function capturePokemon() {
       try {
-        let pokemon_id = await DATABASE.insert({ chain_id, evolution_id, experience_plus }) .into('captured_pokemons')
-        await DATABASE.insert({ user_id, pokemon_id}).into('users_pokemons')
+        let pokemon_id = await DATABASE.insert({
+          chain_id,
+          evolution_id,
+          experience_plus
+        }).into('captured_pokemons')
+
+        await DATABASE.insert({
+          user_id: req.session.user.id,
+          pokemon_id
+        }).into('users_pokemons')
+
         res.json({ errorField: '' })
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
 
     capturePokemon()
   } else {
-    if (!is_user_id_OK) {
-      res.json({ errorField: 'user_id', msg: 'O ID do usuário é inválido.' })
-    }
     if (!is_chain_id_OK) {
-      res.json({ errorField: 'chain_id', msg: 'O ID da chain é inválido.' })
+      res.json({
+        errorField: 'chain_id',
+        msg: 'O ID da chain é inválido.'
+      })
     }
     if (!is_evolution_id_OK) {
-      res.json({ errorField: 'evolution_id', msg: 'O ID da evolução é inválido.' })
+      res.json({
+        errorField: 'evolution_id',
+        msg: 'O ID da evolução é inválido.'
+      })
     }
     if (!is_experience_plus_OK) {
-      res.json({ errorField: 'experience_plus', msg: 'O valor da experiencia adicional é inválido.' })
+      res.json({
+        errorField: 'experience_plus',
+        msg: 'O valor da experiencia adicional é inválido.'
+      })
     }
   }
 })
