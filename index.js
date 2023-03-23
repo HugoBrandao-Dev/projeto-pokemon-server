@@ -462,6 +462,9 @@ app.get('/user/:id/fruits', auth, (req, res) => {
           res.send('Usuário não possui frutas.')
         }
       })
+      .catch(error => {
+        console.error(error)
+      })
   } else {
     res.send('O ID do usuário é inválido.')
   }
