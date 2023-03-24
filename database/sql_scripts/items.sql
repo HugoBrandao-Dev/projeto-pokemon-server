@@ -24,4 +24,8 @@ INSERT INTO items (item, type_id, consumable, cumulative) VALUES
 
 SELECT * FROM items;
 DESCRIBE items;
+
+# Comando para excluir todos os registros da tabela, sem a necessidade de excluir a tabela.
+TRUNCATE TABLE items;
+
 DROP TABLE items;
