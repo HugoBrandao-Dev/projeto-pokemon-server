@@ -309,6 +309,7 @@ app.get('/user/pokemon/:id', auth, (req, res) => {
   if (is_pokemon_id_OK) {
     DATABASE.select([
       "captured_pokemons.id",
+      "captured_pokemons.specie",
       "captured_pokemons.chain_id",
       "captured_pokemons.evolution_id",
       "captured_pokemons.experience_plus",
