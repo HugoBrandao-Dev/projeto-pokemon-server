@@ -282,6 +282,7 @@ app.get('/pokemonsForBeginners', auth, (req, res) => {
 app.get('/user/pokemons', auth, (req, res) => {
   DATABASE.select([
     'captured_pokemons.id',
+    'captured_pokemons.specie',
     'captured_pokemons.chain_id',
     'captured_pokemons.evolution_id',
     'captured_pokemons.experience_plus'
