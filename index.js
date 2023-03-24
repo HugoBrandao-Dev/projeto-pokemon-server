@@ -355,14 +355,14 @@ app.post('/user/balls', auth, (req, res) => {
   let is_great_ball_OK = validator.isInt(great_ball, {
     allow_leading_zeroes: false
   })
-  let is_master_ball_OK = validator.isInt(ultra_ball, {
+  let is_ultra_ball_OK = validator.isInt(ultra_ball, {
     allow_leading_zeroes: false
   })
-  let is_ultra_ball_OK = validator.isInt(master_ball, {
+  let is_master_ball_OK = validator.isInt(master_ball, {
     allow_leading_zeroes: false
   })
 
-  if (is_poke_ball_OK && is_great_ball_OK && is_master_ball_OK && is_ultra_ball_OK) {
+  if (is_poke_ball_OK && is_great_ball_OK && is_ultra_ball_OK && is_master_ball_OK) {
     async function setBallsAmount() {
       try {
         await DATABASE.insert({
@@ -419,13 +419,13 @@ app.post('/user/balls', auth, (req, res) => {
         msg: 'A quantidade de GREAT BALL é inválida.'
       })
     }
-    if (!is_master_ball_OK) {
+    if (!is_ultra_ball_OK) {
       res.json({
         errorField: 'master-ball',
         msg: 'A quantidade de MASTER BALL é inválida.'
       })
     }
-    if (!is_ultra_ball_OK) {
+    if (!is_master_ball_OK) {
       res.json({
         errorField: 'ultra-ball',
         msg: 'A quantidade de ULTRA BALL é inválida.'
