@@ -342,6 +342,98 @@ app.get('/user/balls', auth, (req, res) => {
     })
 })
 
+app.post('/user/balls', auth, (req, res) => {
+  let poke_ball = req.body['poke-ball']
+  let great_ball = req.body['great-ball']
+  let ultra_ball = req.body['ultra-ball']
+  let master_ball = req.body['master-ball']
+
+  // Validando campos
+  let is_poke_ball_OK = validator.isInt(poke_ball, {
+    allow_leading_zeroes: false
+  })
+  let is_great_ball_OK = validator.isInt(great_ball, {
+    allow_leading_zeroes: false
+  })
+  let is_master_ball_OK = validator.isInt(ultra_ball, {
+    allow_leading_zeroes: false
+  })
+  let is_ultra_ball_OK = validator.isInt(master_ball, {
+    allow_leading_zeroes: false
+  })
+
+  if (is_poke_ball_OK && is_great_ball_OK && is_master_ball_OK && is_ultra_ball_OK) {
+    async function setBallsAmount() {
+      try {
+        await DATABASE.insert({
+          user_id: req.session.user.id,
+          // Cuidado com o valor na tabela (VALOR HARDCODED).
+          item_id: 1,
+          amount: poke_ball
+        })
+        .into('users_items')
+
+        await DATABASE.insert({
+          user_id: req.session.user.id,
+          // Cuidado com o valor na tabela (VALOR HARDCODED).
+          item_id: 2,
+          amount: great_ball
+        })
+        .into('users_items')
+
+        await DATABASE.insert({
+          user_id: req.session.user.id,
+          // Cuidado com o valor na tabela (VALOR HARDCODED).
+          item_id: 3,
+          amount: ultra_ball
+        })
+        .into('users_items')
+
+        await DATABASE.insert({
+          user_id: req.session.user.id,
+          // Cuidado com o valor na tabela (VALOR HARDCODED).
+          item_id: 4,
+          amount: master_ball
+        })
+        .into('users_items')
+
+        res.json({
+          errorField: '',
+          msg: 'Quantidades de poke-bolas salvadas.'
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    setBallsAmount()
+  } else {
+    if (!is_poke_ball_OK) {
+      res.json({
+        errorField: 'poke-ball',
+        msg: 'A quantidade de POKE BALL é inválida.'
+      })
+    }
+    if (!is_great_ball_OK) {
+      res.json({
+        errorField: 'great-ball',
+        msg: 'A quantidade de GREAT BALL é inválida.'
+      })
+    }
+    if (!is_master_ball_OK) {
+      res.json({
+        errorField: 'master-ball',
+        msg: 'A quantidade de MASTER BALL é inválida.'
+      })
+    }
+    if (!is_ultra_ball_OK) {
+      res.json({
+        errorField: 'ultra-ball',
+        msg: 'A quantidade de ULTRA BALL é inválida.'
+      })
+    }
+  }
+})
+
 app.post('/user/balls/update', auth, (req, res) => {
   let poke_ball = req.body['poke-ball']
   let great_ball = req.body['great-ball']
