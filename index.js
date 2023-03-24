@@ -340,18 +340,13 @@ app.get('/user/balls', auth, (req, res) => {
 })
 
 
-app.post('/balls', auth, (req, res) => {
-  let user_id = req.body.id
+app.post('/user/balls/update', auth, (req, res) => {
   let poke_ball = req.body['poke-ball']
   let great_ball = req.body['great-ball']
   let ultra_ball = req.body['ultra-ball']
   let master_ball = req.body['master-ball']
 
   // Validando campos
-  let is_user_id_OK = validator.isInt(user_id, {
-    min: 1,
-    allow_leading_zeroes: false
-  })
   let is_poke_ball_OK = validator.isInt(poke_ball, {
     allow_leading_zeroes: false
   })
@@ -365,11 +360,11 @@ app.post('/balls', auth, (req, res) => {
     allow_leading_zeroes: false
   })
 
-  if (is_user_id_OK && is_poke_ball_OK && is_great_ball_OK && is_ultra_ball_OK && is_master_ball_OK) {
+  if (is_poke_ball_OK && is_great_ball_OK && is_ultra_ball_OK && is_master_ball_OK) {
     async function setBallsAmount() {
       try {
         await DATABASE.update({ amount: poke_ball })
-        .where({ user_id, item_id: 1 })
+        .where({ user_id: req.session.user.id, item_id: 1 })
         .table('users_items')
 
         await DATABASE.update({ amount: great_ball })
@@ -393,7 +388,7 @@ app.post('/balls', auth, (req, res) => {
       .then(response => {
         res.json({
           errorField: '',
-          msg: "Informações de poke-bolas guardadas."
+          msg: "Quantidades de poke-bolas atualizadas."
         })
       })
       .catch(error => {
@@ -403,11 +398,6 @@ app.post('/balls', auth, (req, res) => {
         })
       })
   } else {
-    if (!is_user_id_OK) {
-      res.json({
-        errorField: 'id',
-        msg: 'O ID do usuário é inválido.'})
-    }
     if (!is_poke_ball_OK) {
       res.json({
         errorField: 'poke-ball',
