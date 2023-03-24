@@ -141,11 +141,15 @@ app.post("/register", (req, res) => {
 app.post('/capture', auth, (req, res) => {
 
   // Informações do pokemon a serem cadastradas.
+  let specie = req.body.specie
   let chain_id = req.body.chain_id
   let evolution_id = req.body.evolution_id
   let experience_plus = req.body.experience_plus
 
   // Validando campos
+  let is_specie_OK = validator.isAlpha(specie, ['pt-BR'],{
+    ignore: '-'
+  })
   let is_chain_id_OK = validator.isInt(chain_id, {
     min: 1,
     allow_leading_zeroes: false
@@ -159,10 +163,11 @@ app.post('/capture', auth, (req, res) => {
     allow_leading_zeroes: false
   })
 
-  if (is_chain_id_OK && is_evolution_id_OK && is_experience_plus_OK) {
+  if (is_specie_OK && is_chain_id_OK && is_evolution_id_OK && is_experience_plus_OK) {
     async function capturePokemon() {
       try {
         let pokemon_id = await DATABASE.insert({
+          specie,
           chain_id,
           evolution_id,
           experience_plus
@@ -181,6 +186,12 @@ app.post('/capture', auth, (req, res) => {
 
     capturePokemon()
   } else {
+    if (!is_specie_OK) {
+      res.json({
+        errorField: 'specie',
+        msg: 'O nome da espécie é inválido.'
+      })
+    }
     if (!is_chain_id_OK) {
       res.json({
         errorField: 'chain_id',
