@@ -27,6 +27,8 @@ app.use(session({
   }
 }))
 
+/* #################### ROTAS PARA USUÁRIO #################### */
+
 app.post('/login', (req, res) => {
   let email = req.body.email
   let user_password = req.body.user_password
@@ -133,6 +135,8 @@ app.post("/register", (req, res) => {
     }
   }
 })
+
+/* #################### ROTAS PARA POKEMONs #################### */
 
 app.post('/capture', auth, (req, res) => {
 
@@ -312,6 +316,8 @@ app.get('/user/pokemon/:id', auth, (req, res) => {
     }
 })
 
+/* #################### ROTAS PARA POKE-BOLAS #################### */
+
 // Faz a busca pelas quantidades de cada pokebola que o usuário possui.
 app.get('/user/balls', auth, (req, res) => {
   DATABASE.select([
@@ -335,7 +341,6 @@ app.get('/user/balls', auth, (req, res) => {
       console.error(error)
     })
 })
-
 
 app.post('/user/balls/update', auth, (req, res) => {
   let poke_ball = req.body['poke-ball']
@@ -417,6 +422,8 @@ app.post('/user/balls/update', auth, (req, res) => {
     }
   }
 })
+
+/* #################### ROTAS PARA FRUTAS #################### */
 
 // Faz a busca pelas quantidades de cada fruta que o usuário possui.
 app.get('/user/fruits', auth, (req, res) => {
