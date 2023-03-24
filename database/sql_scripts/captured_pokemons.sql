@@ -5,6 +5,7 @@ já capturados por algum usuário.
 
 CREATE TABLE captured_pokemons (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	specie VARCHAR(25) NOT NULL,
 	chain_id INT UNSIGNED NOT NULL,
 	/*
 	evolution_id 1 = forma base;
