@@ -541,6 +541,80 @@ app.get('/user/fruits', auth, (req, res) => {
     })
 })
 
+app.post('/user/fruits', auth, (req, res) => {
+  let jaboca_berry = req.body['jaboca-berry']
+  let razz_berry = req.body['razz-berry']
+  let bluk_berry = req.body['bluk-berry']
+
+  // Validando campos
+  let is_jaboca_berry_OK = validator.isInt(jaboca_berry, {
+    allow_leading_zeroes: false
+  })
+  let is_razz_berry_OK = validator.isInt(razz_berry, {
+    allow_leading_zeroes: false
+  })
+  let is_bluk_berry_OK = validator.isInt(bluk_berry, {
+    allow_leading_zeroes: false
+  })
+
+  if (is_jaboca_berry_OK && is_razz_berry_OK && is_bluk_berry_OK) {
+    async function setBallsAmount() {
+      try {
+        await DATABASE.insert({
+          user_id: req.session.user.id,
+          // Cuidado com o valor na tabela (VALOR HARDCODED).
+          item_id: 5,
+          amount: jaboca_berry
+        })
+        .into('users_items')
+
+        await DATABASE.insert({
+          user_id: req.session.user.id,
+          // Cuidado com o valor na tabela (VALOR HARDCODED).
+          item_id: 6,
+          amount: razz_berry
+        })
+        .into('users_items')
+
+        await DATABASE.insert({
+          user_id: req.session.user.id,
+          // Cuidado com o valor na tabela (VALOR HARDCODED).
+          item_id: 7,
+          amount: bluk_berry
+        })
+        .into('users_items')
+
+        res.json({
+          errorField: '',
+          msg: 'Quantidades de frutas salvadas.'
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    setBallsAmount()
+  } else {
+    if (!is_jaboca_berry_OK) {
+      res.json({
+        errorField: 'jaboca-berry',
+        msg: 'A quantidade de GREAT BALL é inválida.'
+      })
+    }
+    if (!is_razz_berry_OK) {
+      res.json({
+        errorField: 'razz-berry',
+        msg: 'A quantidade de MASTER BALL é inválida.'
+      })
+    }
+    if (!is_bluk_berry_OK) {
+      res.json({
+        errorField: 'bluk-berry',
+        msg: 'A quantidade de ULTRA BALL é inválida.'
+      })
+    }
+  }
+})
+
 app.post('/user/fruits/update', auth, (req, res) => {
   let jaboca_berry = req.body['jaboca-berry']
   let razz_berry = req.body['razz-berry']
