@@ -442,17 +442,12 @@ app.get('/user/fruits', auth, (req, res) => {
     })
 })
 
-app.post('/fruits', auth, (req, res) => {
-  let user_id = req.body.id
+app.post('/user/fruits/update', auth, (req, res) => {
   let jaboca_berry = req.body['jaboca-berry']
   let razz_berry = req.body['razz-berry']
   let bluk_berry = req.body['bluk-berry']
 
   // Validando campos
-  let is_user_id_OK = validator.isInt(user_id, {
-    min: 1,
-    allow_leading_zeroes: false
-  })
   let is_jaboca_berry_OK = validator.isInt(jaboca_berry, {
     allow_leading_zeroes: false
   })
@@ -463,19 +458,19 @@ app.post('/fruits', auth, (req, res) => {
     allow_leading_zeroes: false
   })
 
-  if (is_user_id_OK && is_jaboca_berry_OK && is_razz_berry_OK && is_bluk_berry_OK) {
+  if (is_jaboca_berry_OK && is_razz_berry_OK && is_bluk_berry_OK) {
     async function setFruitsAmount() {
       try {
         await DATABASE.update({ amount: req.body['jaboca-berry'] })
-        .where({ user_id, item_id: 5 })
+        .where({ user_id: req.session.user.id, item_id: 5 })
         .table('users_items')
 
         await DATABASE.update({ amount: req.body['razz-berry'] })
-        .where({ user_id, item_id: 6 })
+        .where({ user_id: req.session.user.id, item_id: 6 })
         .table('users_items')
 
         await DATABASE.update({ amount: req.body['bluk-berry'] })
-        .where({ user_id, item_id: 7 })
+        .where({ user_id: req.session.user.id, item_id: 7 })
         .table('users_items')
 
       } catch (error) {
@@ -487,7 +482,7 @@ app.post('/fruits', auth, (req, res) => {
       .then(response => {
         res.json({
           errorField: "",
-          msg: "Informações de frutas guardadas."
+          msg: "Quantidades de frutas atualizadas."
         })
       })
       .catch(error => {
@@ -497,12 +492,6 @@ app.post('/fruits', auth, (req, res) => {
         })
       })
   } else {
-    if (!is_user_id_OK) {
-      res.json({
-        errorField: 'id',
-        msg: 'O ID do usuário é inválido.'
-      })
-    }
     if (!is_jaboca_berry_OK) {
       res.json({
         errorField: 'jaboca-berry',
