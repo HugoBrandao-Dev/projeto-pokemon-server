@@ -4,11 +4,11 @@ Opções de pokemons para que o usuário que não tem nenhum (para quem está in
 
 CREATE TABLE pokemons_for_beginner (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	pokemon VARCHAR(25) NOT NULL,
+	specie VARCHAR(25) NOT NULL,
 	PRIMARY KEY (id)
 );
 
-INSERT INTO pokemons_for_beginner(pokemon) VALUES
+INSERT INTO pokemons_for_beginner(specie) VALUES
 ("bulbasaur"),
 ("charmander"),
 ("squirtle"),
@@ -16,3 +16,4 @@ INSERT INTO pokemons_for_beginner(pokemon) VALUES
 
 SELECT * FROM pokemons_for_beginner;
 DESCRIBE pokemons_for_beginner;
+DROP TABLE pokemons_for_beginner;
