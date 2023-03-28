@@ -467,7 +467,10 @@ app.get('/user/balls', auth, (req, res) => {
     })
 })
 
+// Atualiza as quantidades de cada pokebola para o usuário logado.
 app.post('/user/balls/update', auth, (req, res) => {
+  let user_id = getUserID(req.headers['authorization'])
+
   let poke_ball = req.body['poke-ball']
   let great_ball = req.body['great-ball']
   let ultra_ball = req.body['ultra-ball']
@@ -491,7 +494,7 @@ app.post('/user/balls/update', auth, (req, res) => {
     async function setBallsAmount() {
       try {
         await DATABASE.update({ amount: poke_ball })
-        .where({ user_id: req.session.user.id, item_id: 1 })
+        .where({ user_id, item_id: 1 })
         .table('users_items')
 
         await DATABASE.update({ amount: great_ball })
