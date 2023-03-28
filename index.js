@@ -346,31 +346,10 @@ app.get('/user/pokemon/:id', auth, (req, res) => {
 
 /* #################### ROTAS PARA POKE-BOLAS #################### */
 
-// Faz a busca pelas quantidades de cada pokebola que o usuário possui.
-app.get('/user/balls', auth, (req, res) => {
-  DATABASE.select([
-    'items.id',
-    'items.item',
-    'users_items.amount'
-  ]).table('users_items')
-  .innerJoin('items', 'items.id', 'users_items.item_id')
-  .innerJoin('items_types', 'items_types.id', 'items.type_id')
-  .where({'users_items.user_id': req.session.user.id, 'items_types.type_name': 'ball'})
-    .then(response => {
-      if (response.length) {
-        res.json(response)
-      } else {
-        res.json({
-          msg: 'Usuário não possui poke-bolas.'
-        })
-      }
-    })
-    .catch(error => {
-      console.error(error)
-    })
-})
-
+// Cadastra as quantidades de cada pokebola para o usuário logado.
 app.post('/user/balls', auth, (req, res) => {
+  let user_id = getUserID(req.headers['authorization'])
+
   let poke_ball = req.body['poke-ball']
   let great_ball = req.body['great-ball']
   let ultra_ball = req.body['ultra-ball']
@@ -394,7 +373,7 @@ app.post('/user/balls', auth, (req, res) => {
     async function setBallsAmount() {
       try {
         await DATABASE.insert({
-          user_id: req.session.user.id,
+          user_id,
           // Cuidado com o valor na tabela (VALOR HARDCODED).
           item_id: 1,
           amount: poke_ball
@@ -402,7 +381,7 @@ app.post('/user/balls', auth, (req, res) => {
         .into('users_items')
 
         await DATABASE.insert({
-          user_id: req.session.user.id,
+          user_id,
           // Cuidado com o valor na tabela (VALOR HARDCODED).
           item_id: 2,
           amount: great_ball
@@ -410,7 +389,7 @@ app.post('/user/balls', auth, (req, res) => {
         .into('users_items')
 
         await DATABASE.insert({
-          user_id: req.session.user.id,
+          user_id,
           // Cuidado com o valor na tabela (VALOR HARDCODED).
           item_id: 3,
           amount: ultra_ball
@@ -418,7 +397,7 @@ app.post('/user/balls', auth, (req, res) => {
         .into('users_items')
 
         await DATABASE.insert({
-          user_id: req.session.user.id,
+          user_id,
           // Cuidado com o valor na tabela (VALOR HARDCODED).
           item_id: 4,
           amount: master_ball
@@ -460,6 +439,30 @@ app.post('/user/balls', auth, (req, res) => {
       })
     }
   }
+})
+
+// Faz a busca pelas quantidades de cada pokebola que o usuário possui.
+app.get('/user/balls', auth, (req, res) => {
+  DATABASE.select([
+    'items.id',
+    'items.item',
+    'users_items.amount'
+  ]).table('users_items')
+  .innerJoin('items', 'items.id', 'users_items.item_id')
+  .innerJoin('items_types', 'items_types.id', 'items.type_id')
+  .where({'users_items.user_id': req.session.user.id, 'items_types.type_name': 'ball'})
+    .then(response => {
+      if (response.length) {
+        res.json(response)
+      } else {
+        res.json({
+          msg: 'Usuário não possui poke-bolas.'
+        })
+      }
+    })
+    .catch(error => {
+      console.error(error)
+    })
 })
 
 app.post('/user/balls/update', auth, (req, res) => {
