@@ -656,7 +656,10 @@ app.get('/user/fruits', auth, (req, res) => {
     })
 })
 
+// Atualiza as quantidades de cada fruta para o usuário logado.
 app.post('/user/fruits/update', auth, (req, res) => {
+  let user_id = getUserID(req.headers['authorization'])
+
   let jaboca_berry = req.body['jaboca-berry']
   let razz_berry = req.body['razz-berry']
   let bluk_berry = req.body['bluk-berry']
@@ -676,15 +679,15 @@ app.post('/user/fruits/update', auth, (req, res) => {
     async function setFruitsAmount() {
       try {
         await DATABASE.update({ amount: req.body['jaboca-berry'] })
-        .where({ user_id: req.session.user.id, item_id: 5 })
+        .where({ user_id, item_id: 5 })
         .table('users_items')
 
         await DATABASE.update({ amount: req.body['razz-berry'] })
-        .where({ user_id: req.session.user.id, item_id: 6 })
+        .where({ user_id, item_id: 6 })
         .table('users_items')
 
         await DATABASE.update({ amount: req.body['bluk-berry'] })
-        .where({ user_id: req.session.user.id, item_id: 7 })
+        .where({ user_id, item_id: 7 })
         .table('users_items')
 
       } catch (error) {
