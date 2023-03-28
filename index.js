@@ -553,31 +553,10 @@ app.post('/user/balls/update', auth, (req, res) => {
 
 /* #################### ROTAS PARA FRUTAS #################### */
 
-// Faz a busca pelas quantidades de cada fruta que o usuário possui.
-app.get('/user/fruits', auth, (req, res) => {
-  DATABASE.select([
-    'items.id',
-    'items.item',
-    'users_items.amount'
-  ]).table('users_items')
-  .innerJoin('items', 'items.id', 'users_items.item_id')
-  .innerJoin('items_types', 'items_types.id', 'items.type_id')
-  .where({'users_items.user_id': req.session.user.id, 'items_types.type_name': 'fruit'})
-    .then(response => {
-      if (response.length) {
-        res.json(response)
-      } else {
-        res.json({
-          msg: 'Usuário não possui frutas.'
-        })
-      }
-    })
-    .catch(error => {
-      console.error(error)
-    })
-})
-
+// Cadastra as quantidades de cada fruta para o usuário logado.
 app.post('/user/fruits', auth, (req, res) => {
+  let user_id = getUserID(req.headers['authorization'])
+
   let jaboca_berry = req.body['jaboca-berry']
   let razz_berry = req.body['razz-berry']
   let bluk_berry = req.body['bluk-berry']
@@ -597,7 +576,7 @@ app.post('/user/fruits', auth, (req, res) => {
     async function setBallsAmount() {
       try {
         await DATABASE.insert({
-          user_id: req.session.user.id,
+          user_id,
           // Cuidado com o valor na tabela (VALOR HARDCODED).
           item_id: 5,
           amount: jaboca_berry
@@ -605,7 +584,7 @@ app.post('/user/fruits', auth, (req, res) => {
         .into('users_items')
 
         await DATABASE.insert({
-          user_id: req.session.user.id,
+          user_id,
           // Cuidado com o valor na tabela (VALOR HARDCODED).
           item_id: 6,
           amount: razz_berry
@@ -613,7 +592,7 @@ app.post('/user/fruits', auth, (req, res) => {
         .into('users_items')
 
         await DATABASE.insert({
-          user_id: req.session.user.id,
+          user_id,
           // Cuidado com o valor na tabela (VALOR HARDCODED).
           item_id: 7,
           amount: bluk_berry
@@ -649,6 +628,30 @@ app.post('/user/fruits', auth, (req, res) => {
       })
     }
   }
+})
+
+// Faz a busca pelas quantidades de cada fruta que o usuário possui.
+app.get('/user/fruits', auth, (req, res) => {
+  DATABASE.select([
+    'items.id',
+    'items.item',
+    'users_items.amount'
+  ]).table('users_items')
+  .innerJoin('items', 'items.id', 'users_items.item_id')
+  .innerJoin('items_types', 'items_types.id', 'items.type_id')
+  .where({'users_items.user_id': req.session.user.id, 'items_types.type_name': 'fruit'})
+    .then(response => {
+      if (response.length) {
+        res.json(response)
+      } else {
+        res.json({
+          msg: 'Usuário não possui frutas.'
+        })
+      }
+    })
+    .catch(error => {
+      console.error(error)
+    })
 })
 
 app.post('/user/fruits/update', auth, (req, res) => {
