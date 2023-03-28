@@ -632,6 +632,8 @@ app.post('/user/fruits', auth, (req, res) => {
 
 // Faz a busca pelas quantidades de cada fruta que o usuário possui.
 app.get('/user/fruits', auth, (req, res) => {
+  let user_id = getUserID(req.headers['authorization'])
+
   DATABASE.select([
     'items.id',
     'items.item',
@@ -639,7 +641,7 @@ app.get('/user/fruits', auth, (req, res) => {
   ]).table('users_items')
   .innerJoin('items', 'items.id', 'users_items.item_id')
   .innerJoin('items_types', 'items_types.id', 'items.type_id')
-  .where({'users_items.user_id': req.session.user.id, 'items_types.type_name': 'fruit'})
+  .where({'users_items.user_id': user_id, 'items_types.type_name': 'fruit'})
     .then(response => {
       if (response.length) {
         res.json(response)
