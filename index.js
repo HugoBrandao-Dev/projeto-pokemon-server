@@ -47,13 +47,8 @@ app.post('/login', (req, res) => {
       if (response.length) {
         let user = response[0]
         if (bcrypt.compareSync(user_password, user.user_password)) {
-          req.session.user = {
-            id: user.id,
-            full_name: user.full_name,
-            born_date: user.born_date,
-            email: user.email
-          }
-          res.json({ errorField: '' })
+          let token = jwt.sign({ id: user.id, email: user.email }, secret)
+          res.json({ token })
         } else {
           res.json({ errorField: 'iptPassword', msg: 'Senha inválida.' })
         }
