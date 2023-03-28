@@ -282,6 +282,8 @@ app.get('/pokemonsForBeginners', auth, (req, res) => {
 
 // Faz a listagem de pokemons que o usuário já capturou.
 app.get('/user/pokemons', auth, (req, res) => {
+  let user_id = getUserID(req.headers['authorization'])
+
   DATABASE.select([
     'captured_pokemons.id',
     'captured_pokemons.specie',
@@ -290,7 +292,7 @@ app.get('/user/pokemons', auth, (req, res) => {
     'captured_pokemons.experience_plus'
   ]).table('users_pokemons')
   .innerJoin('captured_pokemons', 'captured_pokemons.id', 'users_pokemons.pokemon_id')
-  .where({ 'users_pokemons.user_id': req.session.user.id })
+  .where({ 'users_pokemons.user_id': user_id })
     .then(response => {
       res.json(response)
     })
