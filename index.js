@@ -69,6 +69,10 @@ app.post('/login', (req, res) => {
   }
 })
 
+app.post('/validate', auth, (req, res) => {
+  res.send('Token válido.')
+})
+
 app.get('/logout', (req, res) => {
   req.session.destroy()
   res.json({ errorField: '' })
