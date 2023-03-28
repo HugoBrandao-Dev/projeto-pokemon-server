@@ -443,6 +443,8 @@ app.post('/user/balls', auth, (req, res) => {
 
 // Faz a busca pelas quantidades de cada pokebola que o usuário possui.
 app.get('/user/balls', auth, (req, res) => {
+  let user_id = getUserID(req.headers['authorization'])
+
   DATABASE.select([
     'items.id',
     'items.item',
@@ -450,7 +452,7 @@ app.get('/user/balls', auth, (req, res) => {
   ]).table('users_items')
   .innerJoin('items', 'items.id', 'users_items.item_id')
   .innerJoin('items_types', 'items_types.id', 'items.type_id')
-  .where({'users_items.user_id': req.session.user.id, 'items_types.type_name': 'ball'})
+  .where({'users_items.user_id': user_id, 'items_types.type_name': 'ball'})
     .then(response => {
       if (response.length) {
         res.json(response)
