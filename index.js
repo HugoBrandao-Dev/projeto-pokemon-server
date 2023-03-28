@@ -303,6 +303,7 @@ app.get('/user/pokemons', auth, (req, res) => {
 
 app.get('/user/pokemon/:id', auth, (req, res) => {
   let pokemon_id = req.params.id
+  let user_id = getUserID(req.headers['authorization'])
 
   // Validando campos
   let is_pokemon_id_OK = validator.isInt(pokemon_id, {
@@ -321,7 +322,7 @@ app.get('/user/pokemon/:id', auth, (req, res) => {
     ])
     .table('captured_pokemons')
     .innerJoin('users_pokemons', 'users_pokemons.pokemon_id', 'captured_pokemons.id')
-    .where({ 'captured_pokemons.id': pokemon_id, 'users_pokemons.user_id': req.session.user.id })
+    .where({ 'captured_pokemons.id': pokemon_id, 'users_pokemons.user_id': user_id })
       .then(response => {
         if (response.length) {
           let pokemon = response[0]
