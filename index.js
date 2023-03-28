@@ -5,6 +5,13 @@ const cors = require('cors')
 const jwt = require('jsonwebtoken')
 const secret = 'qwuirlsklaflks23'
 
+function getUserID(header) {
+  const bearer = header.split(' ')
+  const token = bearer[1]
+  const decoded = jwt.verify(token, secret)
+  return decoded.id
+}
+
 app.use(cors())
 
 // Bibliotecas
@@ -157,7 +164,10 @@ app.post('/capture', auth, (req, res) => {
 
   if (is_specie_OK && is_chain_id_OK && is_evolution_id_OK && is_experience_plus_OK) {
     async function capturePokemon() {
+
       try {
+        const user_id = await getUserID(req.headers['authorization'])
+
         let pokemon_id = await DATABASE.insert({
           specie,
           chain_id,
@@ -166,7 +176,7 @@ app.post('/capture', auth, (req, res) => {
         }).into('captured_pokemons')
 
         await DATABASE.insert({
-          user_id: req.session.user.id,
+          user_id,
           pokemon_id
         }).into('users_pokemons')
 
