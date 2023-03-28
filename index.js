@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 
+const jwt = require('jsonwebtoken')
+const secret = 'qwuirlsklaflks23'
+
 app.use(cors())
 
 const session = require('express-session')
