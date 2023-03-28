@@ -7,8 +7,6 @@ const secret = 'qwuirlsklaflks23'
 
 app.use(cors())
 
-const session = require('express-session')
-
 // Bibliotecas
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
@@ -22,13 +20,6 @@ const acceptableCharacters = {
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
-
-app.use(session({
-  secret: "nioqwecvxopqwer547qwqer5",
-  cookie: {
-    maxAge: 86400000 // 1 dia
-  }
-}))
 
 /* #################### ROTAS PARA USUÁRIO #################### */
 
@@ -74,7 +65,6 @@ app.post('/validate', auth, (req, res) => {
 })
 
 app.get('/logout', (req, res) => {
-  req.session.destroy()
   res.json({ errorField: '' })
 })
 
