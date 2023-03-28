@@ -18,7 +18,6 @@ function authentication(req, res, next) {
       console.error(error)
       res.send('Token inválido.')
     }
-    next()
   } else {
     res.send('Faça o login.')
   }
