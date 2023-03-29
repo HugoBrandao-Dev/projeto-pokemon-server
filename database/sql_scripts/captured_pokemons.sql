@@ -15,7 +15,9 @@ CREATE TABLE captured_pokemons (
 	evolution_id INT UNSIGNED NOT NULL,
 	# Diferença entre a experiência que ganhou com lutas e a base_experience.
 	experience_plus INT UNSIGNED NOT NULL,
-	PRIMARY KEY (id)
+	ball_id INT UNSIGNED DEFAULT 1,
+	PRIMARY KEY (id),
+	CONSTRAINT fk_ball_id FOREIGN KEY (ball_id) REFERENCES items(id)
 );
 
 SELECT * FROM captured_pokemons;
