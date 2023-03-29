@@ -271,7 +271,7 @@ app.post('/upgradePokemon', auth, (req, res) => {
 })
 
 app.get('/pokemonsForBeginners', auth, (req, res) => {
-  DATABASE.select(['pokemon']).table('pokemons_for_beginner')
+  DATABASE.select(['specie']).table('pokemons_for_beginner')
     .then(response => {
       res.json(response)
     })
