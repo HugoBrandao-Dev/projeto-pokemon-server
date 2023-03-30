@@ -289,9 +289,11 @@ app.get('/user/pokemons', auth, (req, res) => {
     'captured_pokemons.specie',
     'captured_pokemons.chain_id',
     'captured_pokemons.evolution_id',
-    'captured_pokemons.experience_plus'
+    'captured_pokemons.experience_plus',
+    'items.item AS ball'
   ]).table('users_pokemons')
   .innerJoin('captured_pokemons', 'captured_pokemons.id', 'users_pokemons.pokemon_id')
+  .innerJoin('items', 'items.id', 'captured_pokemons.ball_id')
   .where({ 'users_pokemons.user_id': user_id })
     .then(response => {
       res.json(response)
