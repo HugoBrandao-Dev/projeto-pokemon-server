@@ -180,7 +180,7 @@ app.post('/capture', auth, (req, res) => {
           pokemon_id
         }).into('users_pokemons')
 
-        res.json({ errorField: '' })
+        res.json(pokemon_id[0])
       } catch (error) {
         console.error(error)
       }
