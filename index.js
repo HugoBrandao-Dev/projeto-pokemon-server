@@ -223,6 +223,7 @@ app.post('/upgradePokemon', auth, (req, res) => {
   let id = req.body.id
 
   // Informações do pokemon a serem atualizadas.
+  let specie = req.body.specie
   let evolution_id = req.body.evolution_id
   let experience_plus = req.body.experience_plus
 
@@ -230,6 +231,9 @@ app.post('/upgradePokemon', auth, (req, res) => {
   let is_id_OK = validator.isInt(id, {
     min: 1,
     allow_leading_zeroes: false
+  })
+  let is_specie_OK = validator.isAlpha(specie, ['pt-BR'],{
+    ignore: '-'
   })
   let is_evolution_id_OK = validator.isInt(evolution_id, {
     min: 1,
@@ -240,8 +244,8 @@ app.post('/upgradePokemon', auth, (req, res) => {
     allow_leading_zeroes: false
   })
 
-  if (is_id_OK && is_evolution_id_OK && is_experience_plus_OK) {
-    DATABASE.update({ evolution_id, experience_plus }).where({ id }).table('captured_pokemons')
+  if (is_id_OK && is_specie_OK && is_evolution_id_OK && is_experience_plus_OK) {
+    DATABASE.update({ specie, evolution_id, experience_plus }).where({ id }).table('captured_pokemons')
       .then(response => {
         res.json({ errorField: '' })
       })
@@ -253,6 +257,12 @@ app.post('/upgradePokemon', auth, (req, res) => {
       res.json({
         errorField: 'id',
         msg: 'O ID do pokemon é inválido.'
+      })
+    }
+    if (!is_specie_OK) {
+      res.json({
+        errorField: 'specie',
+        msg: 'O nome da espécie é inválido.'
       })
     }
     if (!is_evolution_id_OK) {
