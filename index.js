@@ -145,6 +145,9 @@ app.post('/capture', auth, (req, res) => {
   let evolution_id = req.body.evolution_id
   let experience_plus = req.body.experience_plus
 
+  // Cuidado com os valores de IDs na tabela (VALOR HARDCODED).
+  let ball_id = req.body.ball_id
+
   // Validando campos
   let is_specie_OK = validator.isAlpha(specie, ['pt-BR'],{
     ignore: '-'
@@ -164,17 +167,42 @@ app.post('/capture', auth, (req, res) => {
 
   if (is_specie_OK && is_chain_id_OK && is_evolution_id_OK && is_experience_plus_OK) {
     async function capturePokemon() {
-
       try {
         const user_id = await getUserID(req.headers['authorization'])
 
-        let pokemon_id = await DATABASE.insert({
-          specie,
-          chain_id,
-          evolution_id,
-          experience_plus
-        }).into('captured_pokemons')
+        let pokemon_id = null
 
+        if (ball_id) {
+          // Cuidado com os valores dos IDs na tabela (VALOR HARDCODED).
+          let is_ball_id_OK = validator.isInt(ball_id, {
+            min: 1,
+            max: 4,
+            allow_leading_zeroes: false
+          })
+
+          if (is_ball_id_OK) {
+            pokemon_id = await DATABASE.insert({
+              specie,
+              chain_id,
+              evolution_id,
+              experience_plus,
+              ball_id
+            }).into('captured_pokemons')
+          } else {
+            res.json({
+              errorField: 'ball_id',
+              msg: 'O ID da ball_id é inválido.'
+            })
+          }
+        } else {
+          pokemon_id = await DATABASE.insert({
+            specie,
+            chain_id,
+            evolution_id,
+            experience_plus,
+          }).into('captured_pokemons')
+        }
+        
         await DATABASE.insert({
           user_id,
           pokemon_id
