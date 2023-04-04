@@ -149,7 +149,7 @@ app.post('/capture', auth, (req, res) => {
   let ball_id = req.body.ball_id
 
   // Validando campos
-  let is_specie_OK = validator.isAlpha(specie, ['pt-BR'],{
+  let is_specie_OK = validator.isAlphanumeric(specie, ['pt-BR'],{
     ignore: '-'
   })
   let is_chain_id_OK = validator.isInt(chain_id, {
@@ -260,7 +260,7 @@ app.post('/upgradePokemon', auth, (req, res) => {
     min: 1,
     allow_leading_zeroes: false
   })
-  let is_specie_OK = validator.isAlpha(specie, ['pt-BR'],{
+  let is_specie_OK = validator.isAlphanumeric(specie, ['pt-BR'],{
     ignore: '-'
   })
   let is_evolution_id_OK = validator.isInt(evolution_id, {
