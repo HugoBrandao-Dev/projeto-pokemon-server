@@ -167,10 +167,10 @@ app.post('/capture', auth, (req, res) => {
     allow_leading_zeroes: false
   })
   let is_battles_OK = validator.isInt(battles, {
-    min: 1,
+    allow_leading_zeroes: false
   })
   let is_battles_won_OK = validator.isInt(battles_won, {
-    min: 1,
+    allow_leading_zeroes: false,
     max: parseInt(battles)
   })
 
@@ -299,10 +299,10 @@ app.post('/upgradePokemon', auth, (req, res) => {
     allow_leading_zeroes: false
   })
   let is_battles_OK = validator.isInt(battles, {
-    min: 1,
+    allow_leading_zeroes: false
   })
   let is_battles_won_OK = validator.isInt(battles_won, {
-    min: 1,
+    allow_leading_zeroes: false,
     max: parseInt(battles)
   })
 
@@ -374,6 +374,8 @@ app.get('/user/pokemons', auth, (req, res) => {
     'captured_pokemons.chain_id',
     'captured_pokemons.evolution_id',
     'captured_pokemons.experience_plus',
+    "captured_pokemons.battles",
+    "captured_pokemons.battles_won",
     'items.item AS ball'
   ]).table('users_pokemons')
   .innerJoin('captured_pokemons', 'captured_pokemons.id', 'users_pokemons.pokemon_id')
