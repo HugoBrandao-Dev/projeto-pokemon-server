@@ -742,6 +742,29 @@ app.get('/user/fruits', auth, (req, res) => {
     })
 })
 
+app.get('/fruits/dropRate/:id', auth, (req, res) => {
+  let id = req.params.id
+
+  let is_id_OK = validator.isInt(id)
+
+  if (is_id_OK) {
+    DATABASE.select().table('drop_items_rate').where({ 'drop_items_rate.item_id': id })
+      .then(response => {
+        res.json(response[0])
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  } else {
+    if (!is_id_OK) {
+      res.json({
+        errorField: 'id',
+        msg: 'O id da fruta é inválido.'
+      })
+    }
+  }
+})
+
 // Atualiza as quantidades de cada fruta para o usuário logado.
 app.post('/user/fruits/update', auth, (req, res) => {
   let user_id = getUserID(req.headers['authorization'])
