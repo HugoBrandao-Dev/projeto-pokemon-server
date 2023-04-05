@@ -144,6 +144,8 @@ app.post('/capture', auth, (req, res) => {
   let chain_id = req.body.chain_id
   let evolution_id = req.body.evolution_id
   let experience_plus = req.body.experience_plus
+  let battles = req.body.battles
+  let battles_won = req.body.battles_won
 
   // Cuidado com os valores de IDs na tabela (VALOR HARDCODED).
   let ball_id = req.body.ball_id
@@ -164,8 +166,15 @@ app.post('/capture', auth, (req, res) => {
   let is_experience_plus_OK = validator.isInt(experience_plus, {
     allow_leading_zeroes: false
   })
+  let is_battles_OK = validator.isInt(battles, {
+    min: 1,
+  })
+  let is_battles_won_OK = validator.isInt(battles_won, {
+    min: 1,
+    max: parseInt(battles)
+  })
 
-  if (is_specie_OK && is_chain_id_OK && is_evolution_id_OK && is_experience_plus_OK) {
+  if (is_specie_OK && is_chain_id_OK && is_evolution_id_OK && is_experience_plus_OK && is_battles_OK && is_battles_won_OK) {
     async function capturePokemon() {
       try {
         const user_id = await getUserID(req.headers['authorization'])
@@ -186,7 +195,9 @@ app.post('/capture', auth, (req, res) => {
               chain_id,
               evolution_id,
               experience_plus,
-              ball_id
+              ball_id,
+              battles,
+              battles_won
             }).into('captured_pokemons')
           } else {
             res.json({
@@ -200,6 +211,8 @@ app.post('/capture', auth, (req, res) => {
             chain_id,
             evolution_id,
             experience_plus,
+            battles,
+            battles_won
           }).into('captured_pokemons')
         }
         
@@ -238,6 +251,18 @@ app.post('/capture', auth, (req, res) => {
       res.json({
         errorField: 'experience_plus',
         msg: 'O valor da experiencia adicional é inválido.'
+      })
+    }
+    if (!is_battles_OK) {
+      res.json({
+        errorField: 'is_battles_OK',
+        msg: 'O valor da quantidade de batalhas é inválido.'
+      })
+    }
+    if (!is_battles_won_OK) {
+      res.json({
+        errorField: 'is_battles_won_OK',
+        msg: 'O valor da quantidade de batalhas ganhas é inválido.'
       })
     }
   }
