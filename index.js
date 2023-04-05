@@ -298,16 +298,41 @@ app.post('/upgradePokemon', auth, (req, res) => {
   let is_experience_plus_OK = validator.isInt(experience_plus, {
     allow_leading_zeroes: false
   })
-  let is_battles_OK = validator.isInt(battles, {
-    allow_leading_zeroes: false
-  })
-  let is_battles_won_OK = validator.isInt(battles_won, {
-    allow_leading_zeroes: false,
-    max: parseInt(battles)
-  })
 
-  if (is_id_OK && is_specie_OK && is_evolution_id_OK && is_experience_plus_OK && is_battles_OK && is_battles_won_OK) {
-    DATABASE.update({ specie, evolution_id, experience_plus, battles, battles_won }).where({ id }).table('captured_pokemons')
+  if (is_id_OK && is_specie_OK && is_evolution_id_OK && is_experience_plus_OK) {
+    let fieldsToBeUpdated = { specie, evolution_id, experience_plus }
+
+    if (battles) {
+      let is_battles_OK = validator.isInt(battles, {
+        allow_leading_zeroes: false
+      })
+
+      if (is_battles_OK) {
+        fieldsToBeUpdated.battles = battles
+      } else {
+        res.json({
+          errorField: 'is_battles_OK',
+          msg: 'O valor da quantidade de batalhas é inválido.'
+        })
+      }
+    }
+
+    if (battles_won) {
+      let is_battles_won_OK = validator.isInt(battles_won, {
+        allow_leading_zeroes: false,
+        max: parseInt(battles)
+      })
+
+      if (is_battles_won_OK) {
+        fieldsToBeUpdated.battles_won = battles_won
+      } else {
+        res.json({
+          errorField: 'is_battles_won_OK',
+          msg: 'O valor da quantidade de batalhas ganhas é inválido.'
+        })
+      }
+    }
+    DATABASE.update(fieldsToBeUpdated).where({ id }).table('captured_pokemons')
       .then(response => {
         res.json({ errorField: '' })
       })
@@ -337,18 +362,6 @@ app.post('/upgradePokemon', auth, (req, res) => {
       res.json({
         errorField: 'experience_plus',
         msg: 'O valor da experiencia adicional é inválido.'
-      })
-    }
-    if (!is_battles_OK) {
-      res.json({
-        errorField: 'is_battles_OK',
-        msg: 'O valor da quantidade de batalhas é inválido.'
-      })
-    }
-    if (!is_battles_won_OK) {
-      res.json({
-        errorField: 'is_battles_won_OK',
-        msg: 'O valor da quantidade de batalhas ganhas é inválido.'
       })
     }
   }
