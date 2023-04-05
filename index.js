@@ -404,6 +404,8 @@ app.get('/user/pokemon/:id', auth, (req, res) => {
       "captured_pokemons.chain_id",
       "captured_pokemons.evolution_id",
       "captured_pokemons.experience_plus",
+      "captured_pokemons.battles",
+      "captured_pokemons.battles_won",
       "users_pokemons.user_id"
     ])
     .table('captured_pokemons')
