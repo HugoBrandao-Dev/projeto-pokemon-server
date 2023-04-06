@@ -394,7 +394,10 @@ app.get('/user/pokemons', auth, (req, res) => {
   .innerJoin('captured_pokemons', 'captured_pokemons.id', 'users_pokemons.pokemon_id')
   .innerJoin('items', 'items.id', 'captured_pokemons.ball_id')
   .where({ 'users_pokemons.user_id': user_id })
-    .then(response => {
+  .orderBy([
+    { column: 'battles', order: 'DESC' },
+    { column: 'battles_won', order: 'DESC' }
+  ]).then(response => {
       res.json(response)
     })
     .catch(error => {
