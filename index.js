@@ -938,6 +938,32 @@ app.post('/user/coins', auth, (req, res) => {
   setCoinsAmount()
 })
 
+// Faz a busca pelas quantidades de cada moeda que o usuário possui.
+app.get('/user/coins', auth, (req, res) => {
+  let user_id = getUserID(req.headers['authorization'])
+
+  DATABASE.select([
+    'items.id',
+    'items.item',
+    'users_items.amount'
+  ]).table('users_items')
+  .innerJoin('items', 'items.id', 'users_items.item_id')
+  .innerJoin('items_types', 'items_types.id', 'items.type_id')
+  .where({'users_items.user_id': user_id, 'items_types.type_name': 'coin'})
+    .then(response => {
+        if (response.length) {
+          res.json(response)
+        } else {
+          res.json({
+            msg: 'Usuário não possui coins.'
+          })
+        }
+      })
+    .catch(error => {
+      console.error(error)
+    })
+})
+
 app.listen(4000, error => {
   if (error) {
     console.error('Erro no servidor.')
