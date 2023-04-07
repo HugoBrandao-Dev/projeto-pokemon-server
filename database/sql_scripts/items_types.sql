@@ -6,8 +6,12 @@ CREATE TABLE items_types (
 
 INSERT INTO items_types(type_name) VALUES
 ("ball"),
-("fruit");
+("fruit"),
+("coin");
 
 SELECT * FROM items_types;
 DESCRIBE items_types;
 DROP TABLE items_types;
+
+# Comando para excluir todos os registros da tabela, sem a necessidade de excluir a tabela.
+TRUNCATE TABLE items_types;
