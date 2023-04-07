@@ -964,6 +964,95 @@ app.get('/user/coins', auth, (req, res) => {
     })
 })
 
+// Atualiza as quantidades de coins para o usuário logado.
+app.post('/user/coins/update', auth, (req, res) => {
+  let user_id = getUserID(req.headers['authorization'])
+
+  let copper_coin = req.body['copper-coin']
+  let silver_coin = req.body['silver-coin']
+  let gold_coin = req.body['gold-coin']
+
+  let fieldsToBeUpdated = []
+
+  if (copper_coin) {
+    let is_copper_coin_OK = validator.isInt(copper_coin, {
+      allow_leading_zeroes: false
+    })
+
+    if (is_copper_coin_OK) {
+      fieldsToBeUpdated.push({
+        user_id,
+        item_id: 8,
+        amount: copper_coin
+      })
+    } else {
+      res.json({
+        errorField: 'copper_coin',
+        msg: 'O valor da quantidade de é COPPER COIN inválido.'
+      })
+    }
+  }
+
+  if (silver_coin) {
+    let is_silver_coin_OK = validator.isInt(silver_coin, {
+      allow_leading_zeroes: false
+    })
+
+    if (is_silver_coin_OK) {
+      fieldsToBeUpdated.push({
+        user_id,
+        item_id: 9,
+        amount: silver_coin
+      })
+    } else {
+      res.json({
+        errorField: 'silver_coin',
+        msg: 'O valor da quantidade de é SILVER COIN inválido.'
+      })
+    }
+  }
+
+  if (gold_coin) {
+    let is_gold_coin_OK = validator.isInt(gold_coin, {
+      allow_leading_zeroes: false
+    })
+
+    if (is_gold_coin_OK) {
+      fieldsToBeUpdated.push({
+        user_id,
+        item_id: 10,
+        amount: gold_coin
+      })
+    } else {
+      res.json({
+        errorField: 'gold_coin',
+        msg: 'O valor da quantidade de GOLD COIN é inválido.'
+      })
+    }
+  }
+
+  async function setCoinsAmount() {
+    // Cuidado com o valor do ID das moedas (item_id) na tabela (VALOR HARDCODED).
+    await DATABASE.update({ amount: copper_coin })
+    .table('users_items')
+    .where({ user_id, item_id: 8 })
+
+    await DATABASE.update({ amount: silver_coin })
+    .table('users_items')
+    .where({ user_id, item_id: 9 })
+
+    await DATABASE.update({ amount: gold_coin })
+    .table('users_items')
+    .where({ user_id, item_id: 10 })
+
+  }
+  
+  setCoinsAmount()
+    .then(response => {
+      res.json({ errorField: '' })
+    })
+})
+
 app.listen(4000, error => {
   if (error) {
     console.error('Erro no servidor.')
