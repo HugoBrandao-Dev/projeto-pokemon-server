@@ -22,6 +22,12 @@ INSERT INTO items (item, type_id, consumable, cumulative) VALUES
 ("razz-berry", 2, 1, 1),
 ("bluk-berry", 2, 1, 1);
 
+# Insere os registros das moedas.
+INSERT INTO items (item, type_id, consumable, cumulative) VALUES
+("copper-coin", 3, 1, 1),
+("silver-coin", 3, 1, 1),
+("gold-coin", 3, 1, 1);
+
 SELECT * FROM items;
 DESCRIBE items;
 
