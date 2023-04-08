@@ -17,3 +17,6 @@ Projeto back-end de __portifólio__, que complementa o projeto front-end [Projet
 ### Outra(s)
 * NPM: Para gerenciamento de pacotes;
 * Knex JS: Query builder para a conexão e operações no MySQL.
+
+## Possíveis melhorias futuras
+* Tornar as rotas de busca de rate drop de frutas e moedas uma só, onde a busca será baseada não mais pelo ID do item, mas pelo tipo do item. Além disso, retornar frutas e moedas em suas listas respectivas.
