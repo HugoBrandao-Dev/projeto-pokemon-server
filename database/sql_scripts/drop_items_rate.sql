@@ -6,10 +6,17 @@ CREATE TABLE drop_items_rate (
 	CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES items(id)
 );
 
+# Define os rates de drops para as FRUTAS [CUIDAR COM OS IDs].
 INSERT INTO drop_items_rate VALUES
 (5, 0.75, 5),
 (6, 0.25, 3),
 (7, 0.1, 2);
+
+# Define os rates de drops para as MOEDAS [CUIDAR COM OS IDs].
+INSERT INTO drop_items_rate VALUES
+(8, 0.75, 10),
+(9, 0.1, 5),
+(10, 0.05, 1);
 
 SELECT * FROM drop_items_rate;
 DESCRIBE drop_itesm_rate;
