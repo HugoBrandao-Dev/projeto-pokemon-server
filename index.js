@@ -762,29 +762,6 @@ app.get('/user/fruits', auth, (req, res) => {
     })
 })
 
-app.get('/fruits/dropRate/:id', auth, (req, res) => {
-  let id = req.params.id
-
-  let is_id_OK = validator.isInt(id)
-
-  if (is_id_OK) {
-    DATABASE.select().table('drop_items_rate').where({ 'drop_items_rate.item_id': id })
-      .then(response => {
-        res.json(response[0])
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  } else {
-    if (!is_id_OK) {
-      res.json({
-        errorField: 'id',
-        msg: 'O id da fruta é inválido.'
-      })
-    }
-  }
-})
-
 // Atualiza as quantidades de cada fruta para o usuário logado.
 app.post('/user/fruits/update', auth, (req, res) => {
   let user_id = getUserID(req.headers['authorization'])
@@ -859,9 +836,33 @@ app.post('/user/fruits/update', auth, (req, res) => {
   }
 })
 
+// Busca os rates de drops das frutas.
+app.get('/fruits/dropRate/:id', auth, (req, res) => {
+  let id = req.params.id
+
+  let is_id_OK = validator.isInt(id)
+
+  if (is_id_OK) {
+    DATABASE.select().table('drop_items_rate').where({ 'drop_items_rate.item_id': id })
+      .then(response => {
+        res.json(response[0])
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  } else {
+    if (!is_id_OK) {
+      res.json({
+        errorField: 'id',
+        msg: 'O id da fruta é inválido.'
+      })
+    }
+  }
+})
+
 /* #################### ROTAS PARA COINS #################### */
 
-// Cadastra as quantidades de cada moeda para o usuário logado.
+// Cadastra as quantidades de cada moedas para o usuário logado.
 app.post('/user/coins', auth, (req, res) => {
   let user_id = getUserID(req.headers['authorization'])
 
@@ -944,7 +945,7 @@ app.post('/user/coins', auth, (req, res) => {
   setCoinsAmount()
 })
 
-// Faz a busca pelas quantidades de cada moeda que o usuário possui.
+// Faz a busca pelas quantidades de cada moedas que o usuário possui.
 app.get('/user/coins', auth, (req, res) => {
   let user_id = getUserID(req.headers['authorization'])
 
@@ -970,7 +971,7 @@ app.get('/user/coins', auth, (req, res) => {
     })
 })
 
-// Atualiza as quantidades de coins para o usuário logado.
+// Atualiza as quantidades de moedas para o usuário logado.
 app.post('/user/coins/update', auth, (req, res) => {
   let user_id = getUserID(req.headers['authorization'])
 
@@ -1057,6 +1058,30 @@ app.post('/user/coins/update', auth, (req, res) => {
     .then(response => {
       res.json({ errorField: '' })
     })
+})
+
+// Busca os rates de drops das moedas.
+app.get('/coins/dropRate/:id', auth, (req, res) => {
+  let id = req.params.id
+
+  let is_id_OK = validator.isInt(id)
+
+  if (is_id_OK) {
+    DATABASE.select().table('drop_items_rate').where({ 'drop_items_rate.item_id': id })
+      .then(response => {
+        res.json(response[0])
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  } else {
+    if (!is_id_OK) {
+      res.json({
+        errorField: 'id',
+        msg: 'O id da moeda é inválido.'
+      })
+    }
+  }
 })
 
 app.listen(4000, error => {
