@@ -930,9 +930,15 @@ app.post('/user/coins', auth, (req, res) => {
 
   async function setCoinsAmount() {
     // Cuidado com o valor do ID das moedas (item_id) na tabela (VALOR HARDCODED).
-    await DATABASE.insert({ user_id, item_id: 8, amount: copper_coin }).into('users_items')
-    await DATABASE.insert({ user_id, item_id: 9, amount: silver_coin }).into('users_items')
-    await DATABASE.insert({ user_id, item_id: 10, amount: gold_coin }).into('users_items')
+    for (let field of fieldsToBeUpdated) {
+      try {
+        await DATABASE.insert(field).into('users_items')
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    res.json({ errorField: '' })
   }
   
   setCoinsAmount()
