@@ -1084,6 +1084,18 @@ app.get('/coins/dropRate/:id', auth, (req, res) => {
   }
 })
 
+/* #################### ROTAS PARA SHOPPING #################### */
+
+app.get('/shoppingItems', auth, (req, res) => {
+  DATABASE.select().table('shopping_items')
+    .then(response => {
+      res.json(response)
+    })
+    .catch(error => {
+      console.error(error)
+    })
+})
+
 app.listen(4000, error => {
   if (error) {
     console.error('Erro no servidor.')
