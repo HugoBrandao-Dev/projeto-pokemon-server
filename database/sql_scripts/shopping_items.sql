@@ -18,6 +18,11 @@ INSERT INTO shopping_items VALUES
 (7, 10, 1);
 
 SELECT * FROM shopping_items;
+
+SELECT items.item, price.item AS "required", shopping_items.amount FROM shopping_items
+INNER JOIN items ON items.id = shopping_items.item_id
+INNER JOIN items AS price ON price.id = shopping_items.item_price_id;
+
 DESCRIBE shopping_items;
 
 # Comando para excluir todos os registros da tabela, sem a necessidade de excluir a tabela.
