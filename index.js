@@ -1086,7 +1086,7 @@ app.get('/coins/dropRate/:id', auth, (req, res) => {
 
 /* #################### ROTAS PARA SHOPPING #################### */
 
-app.get('/shoppingItems', auth, (req, res) => {
+app.get('/shoppingItems', (req, res) => {
   DATABASE.select(['items.item', 'items_types.type_name AS type', 'price.item AS required', 'shopping_items.amount']).table('shopping_items')
   .innerJoin('items', 'items.id', 'shopping_items.item_id')
   .innerJoin('items AS price', 'price.id', 'shopping_items.item_price_id')
