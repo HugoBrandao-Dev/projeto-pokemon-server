@@ -19,9 +19,12 @@ INSERT INTO shopping_items VALUES
 
 SELECT * FROM shopping_items;
 
-SELECT items.item, price.item AS "required", shopping_items.amount FROM shopping_items
+# 
+
+SELECT items.item, items_types.type_name AS "type", price.item AS "required", shopping_items.amount FROM shopping_items
 INNER JOIN items ON items.id = shopping_items.item_id
-INNER JOIN items AS price ON price.id = shopping_items.item_price_id;
+INNER JOIN items AS price ON price.id = shopping_items.item_price_id
+INNER JOIN items_types ON items_types.id = items.type_id;
 
 DESCRIBE shopping_items;
 
