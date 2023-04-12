@@ -45,7 +45,9 @@ app.post('/login', (req, res) => {
       if (response.length) {
         let user = response[0]
         if (bcrypt.compareSync(user_password, user.user_password)) {
-          let token = jwt.sign({ id: user.id, email: user.email }, secret)
+          let token = jwt.sign({ id: user.id, email: user.email }, secret, {
+            expireIn: "24h"
+          })
           res.json({ token })
         } else {
           res.json({ errorField: 'iptPassword', msg: 'Senha inválida.' })
