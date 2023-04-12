@@ -16,10 +16,16 @@ function authentication(req, res, next) {
       }
     } catch (error) {
       console.error(error)
-      res.send('Token inválido.')
+      res.json({
+        errorField: 'token',
+        msg: 'Token inválido.'
+      })
     }
   } else {
-    res.send('Faça o login.')
+    res.json({
+      errorField: 'token',
+      msg: 'Faça o login.'
+    })
   }
 }
 
