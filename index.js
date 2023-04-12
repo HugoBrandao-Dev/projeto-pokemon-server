@@ -46,7 +46,7 @@ app.post('/login', (req, res) => {
         let user = response[0]
         if (bcrypt.compareSync(user_password, user.user_password)) {
           let token = jwt.sign({ id: user.id, email: user.email }, secret, {
-            expireIn: "24h"
+            expiresIn: "60000"
           })
           res.json({ token })
         } else {
