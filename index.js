@@ -46,7 +46,7 @@ app.post('/login', (req, res) => {
         let user = response[0]
         if (bcrypt.compareSync(user_password, user.user_password)) {
           let token = jwt.sign({ id: user.id, email: user.email }, secret, {
-            expiresIn: "60000"
+            expiresIn: "120000"
           })
           res.json({ token })
         } else {
@@ -69,8 +69,10 @@ app.post('/login', (req, res) => {
   }
 })
 
-app.post('/validate', auth, (req, res) => {
-  res.send('Token válido.')
+app.get('/validate', auth, (req, res) => {
+  res.json({
+    errorField: ''
+  })
 })
 
 app.get('/logout', (req, res) => {
