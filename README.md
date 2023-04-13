@@ -20,3 +20,4 @@ Projeto back-end de __portifólio__, que complementa o projeto front-end [Projet
 
 ## Possíveis melhorias futuras
 * Tornar as rotas de busca de rate drop de frutas e moedas uma só, onde a busca será baseada não mais pelo ID do item, mas pelo tipo do item. Além disso, retornar frutas e moedas em suas listas respectivas.
+* Há várias utilizações de valores HARDCODE na tabela, buscar forma de obter esses valores através de buscas SQL.

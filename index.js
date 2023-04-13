@@ -69,6 +69,7 @@ app.post('/login', (req, res) => {
   }
 })
 
+// Rota para validação do token.
 app.get('/validate', auth, (req, res) => {
   res.json({
     errorField: ''
@@ -139,7 +140,7 @@ app.post("/register", (req, res) => {
   }
 })
 
-// Rota para atualizas as informacoes do usuário
+// Rota para atualização das informações do usuário.
 app.post('/update', auth, (req, res) => {
   const user_id = getUserID(req.headers['authorization'])
 
@@ -150,7 +151,7 @@ app.post('/update', auth, (req, res) => {
 
   let fieldsToBeUpdated = {}
 
-  // Verifica o existência nome completo
+  // Verifica a existência do nome completo.
   if (full_name) {
     let is_full_name_OK = validator.isAlpha(full_name, ['pt-BR'], {
       ignore: acceptableCharacters.inName
@@ -163,7 +164,7 @@ app.post('/update', auth, (req, res) => {
     }
   }
   
-  // Verifica a existência data de nascimento
+  // Verifica a existência data de nascimento.
   if (born_date) {
     let is_born_date_OK = validator.isDate(born_date)
 
@@ -178,7 +179,7 @@ app.post('/update', auth, (req, res) => {
     try {
       let salt = bcrypt.genSaltSync(8)
 
-      // Verifica a existência o email
+      // Verifica a existência do email
       if (email) {
         let is_email_OK = validator.isEmail(email)
 
@@ -186,7 +187,7 @@ app.post('/update', auth, (req, res) => {
           res.json({ errorField: 'iptEmail', msg: 'Email inválido.' })
         } else {
 
-          // Busca um email igual
+          // Busca um email igual.
           let resEmail = await DATABASE.select().where({ email }).whereNot({ id: user_id }).table('users')
           if (resEmail.length) {
             res.json({ errorField: 'iptEmail', msg: 'Email já cadastrado' })
@@ -229,10 +230,10 @@ app.post('/delete', auth, (req, res) => {
       await DATABASE.delete().where({ id: user_id }).table('users')
       await DATABASE.delete().where({ user_id }).table('users_items')
       
-      // Pega todos os pokemons que pertencem ao usuário
+      // Pega todos os pokemons que pertencem ao usuário.
       let resIds = await DATABASE.select(['pokemon_id']).table('users_pokemons').where({ user_id })
 
-      // Filtra somente os ID do array de objetos.
+      // Filtra somente os IDs do array de objetos.
       let ids = resIds.map(item => item.pokemon_id)
 
       await DATABASE.delete().where({ user_id }).table('users_pokemons')
@@ -252,6 +253,7 @@ app.post('/delete', auth, (req, res) => {
 /* #################### ROTAS PARA POKEMONs #################### */
 
 app.post('/capture', auth, (req, res) => {
+  const user_id = getUserID(req.headers['authorization'])
 
   // Informações do pokemon a serem cadastradas.
   let specie = req.body.specie
@@ -291,8 +293,6 @@ app.post('/capture', auth, (req, res) => {
   if (is_specie_OK && is_chain_id_OK && is_evolution_id_OK && is_experience_plus_OK && is_battles_OK && is_battles_won_OK) {
     async function capturePokemon() {
       try {
-        const user_id = await getUserID(req.headers['authorization'])
-
         let pokemon_id = null
 
         if (ball_id) {
