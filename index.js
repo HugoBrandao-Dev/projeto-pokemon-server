@@ -220,6 +220,35 @@ app.post('/update', auth, (req, res) => {
   updateUser()
 })
 
+// Rota de deleção da conta do usuário.
+app.post('/delete', auth, (req, res) => {
+  const user_id = getUserID(req.headers['authorization'])
+
+  async function deleteAccount() {
+    try {
+      await DATABASE.delete().where({ id: user_id }).table('users')
+      await DATABASE.delete().where({ user_id }).table('users_items')
+      
+      // Pega todos os pokemons que pertencem ao usuário
+      let resIds = await DATABASE.select(['pokemon_id']).table('users_pokemons').where({ user_id })
+
+      // Filtra somente os ID do array de objetos.
+      let ids = resIds.map(item => item.pokemon_id)
+
+      await DATABASE.delete().where({ user_id }).table('users_pokemons')
+      await DATABASE.delete().whereIn('id', ids).table('captured_pokemons')
+
+      res.json({
+        errorField: ''
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  deleteAccount()
+})
+
 /* #################### ROTAS PARA POKEMONs #################### */
 
 app.post('/capture', auth, (req, res) => {
