@@ -139,6 +139,87 @@ app.post("/register", (req, res) => {
   }
 })
 
+// Rota para atualizas as informacoes do usuário
+app.post('/update', auth, (req, res) => {
+  const user_id = getUserID(req.headers['authorization'])
+
+    let full_name = req.body.full_name
+    let email = req.body.email
+    let born_date = req.body.born_date
+    let user_password = req.body.user_password
+
+  let fieldsToBeUpdated = {}
+
+  // Verifica o existência nome completo
+  if (full_name) {
+    let is_full_name_OK = validator.isAlpha(full_name, ['pt-BR'], {
+      ignore: acceptableCharacters.inName
+    })
+
+    if (!is_full_name_OK) {
+      res.json({ errorField: 'iptName', msg: 'Nome inválido.' })
+    } else {
+      fieldsToBeUpdated.full_name = full_name
+    }
+  }
+  
+  // Verifica a existência data de nascimento
+  if (born_date) {
+    let is_born_date_OK = validator.isDate(born_date)
+
+    if (!is_born_date_OK) {
+      res.json({ errorField: 'iptBornDate', msg: 'Data de nascimento inválida.' })
+    } else {
+      fieldsToBeUpdated.born_date = born_date
+    }
+  }
+
+  async function updateUser() {
+    try {
+      let salt = bcrypt.genSaltSync(8)
+
+      // Verifica a existência o email
+      if (email) {
+        let is_email_OK = validator.isEmail(email)
+
+        if (!is_email_OK) {
+          res.json({ errorField: 'iptEmail', msg: 'Email inválido.' })
+        } else {
+
+          // Busca um email igual
+          let resEmail = await DATABASE.select().where({ email }).whereNot({ id: user_id }).table('users')
+          if (resEmail.length) {
+            res.json({ errorField: 'iptEmail', msg: 'Email já cadastrado' })
+          } else {
+            fieldsToBeUpdated.email = email
+          }
+        }
+      }
+
+      // Verifica a existência de uma nova senha.
+      if (user_password) {
+        let is_user_password_OK = validator.isAlphanumeric(user_password, ['pt-BR'], {
+          ignore: acceptableCharacters.inPassword
+        })
+
+        if (!is_user_password_OK) {
+          res.json({ errorField: 'iptPassword', msg: 'Senha inválida.' })
+        } else {
+          let password_hash = bcrypt.hashSync(user_password, salt)
+          fieldsToBeUpdated.user_password = password_hash
+        }
+      }
+
+      await DATABASE.update(fieldsToBeUpdated).table('users').where({ id: user_id })
+
+      res.json({ errorField: '' })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  updateUser()
+})
+
 /* #################### ROTAS PARA POKEMONs #################### */
 
 app.post('/capture', auth, (req, res) => {
