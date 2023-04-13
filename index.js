@@ -140,6 +140,21 @@ app.post("/register", (req, res) => {
   }
 })
 
+// Rota para busca das informações do usuário.
+app.get('/user/info', auth, (req, res) => {
+  const user_id = getUserID(req.headers['authorization'])
+
+  DATABASE.select(["full_name", "born_date", "email"]).table("users").where({ id: user_id })
+    .then(response => {
+      console.log(response)
+      let user = response[0]
+      res.json(user)
+    })
+    .catch(error => {
+      console.error(error)
+    })
+})
+
 // Rota para atualização das informações do usuário.
 app.post('/update', auth, (req, res) => {
   const user_id = getUserID(req.headers['authorization'])
