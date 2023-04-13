@@ -146,7 +146,6 @@ app.get('/user/info', auth, (req, res) => {
 
   DATABASE.select(["full_name", "born_date", "email"]).table("users").where({ id: user_id })
     .then(response => {
-      console.log(response)
       let user = response[0]
       res.json(user)
     })
@@ -156,7 +155,7 @@ app.get('/user/info', auth, (req, res) => {
 })
 
 // Rota para atualização das informações do usuário.
-app.post('/update', auth, (req, res) => {
+app.post('/user/update', auth, (req, res) => {
   const user_id = getUserID(req.headers['authorization'])
 
     let full_name = req.body.full_name
@@ -237,7 +236,7 @@ app.post('/update', auth, (req, res) => {
 })
 
 // Rota de deleção da conta do usuário.
-app.post('/delete', auth, (req, res) => {
+app.post('/user/delete', auth, (req, res) => {
   const user_id = getUserID(req.headers['authorization'])
 
   async function deleteAccount() {
